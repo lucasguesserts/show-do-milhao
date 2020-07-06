@@ -6,6 +6,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
+import confetti from 'canvas-confetti';
 
 import './Game.css';
 import logo from './logo.png';
@@ -29,6 +30,7 @@ const Game = (props) => {
   const [showModal, setShowModal] = useState(false);
 
   const [gameOver, setGameOver] = useState(false);
+  const [gameWon, setGameWon] = useState(false);
 
   const [respostaCerta, setRespostaCerta] = useState(false);
 
@@ -57,7 +59,7 @@ const Game = (props) => {
     setPerguntasFaceis(perguntas.splice(0, 100));
     setPerguntasMedias(perguntas.splice(0, 100));
     setPerguntasDificeis(perguntas.splice(0, 100));
-    setCurrentNivel(1);
+    setCurrentNivel(15);
     setTimerInicio(
       setInterval(() => {
         setCounterInicio((c) => c - 1);
@@ -149,13 +151,21 @@ const Game = (props) => {
 
   // Passa o proximo nivel e zera o timer
   const proximaPergunta = () => {
-    setCurrentNivel((cn) => cn + 1);
-    setCounterPergunta(30);
-    setTimerPergunta(
-      setInterval(() => {
-        setCounterPergunta((c) => c - 1);
-      }, 1000)
-    );
+    if (currentNivel === 15) {
+      confetti({
+        particleCount: 200,
+      });
+      setShowModal(true);
+      setGameWon(true);
+    } else {
+      setCurrentNivel((cn) => cn + 1);
+      setCounterPergunta(30);
+      setTimerPergunta(
+        setInterval(() => {
+          setCounterPergunta((c) => c - 1);
+        }, 1000)
+      );
+    }
   };
 
   // Render
@@ -168,10 +178,11 @@ const Game = (props) => {
         centered
         backdrop='static'
         keyboard={false}>
-        <Modal.Header closeButton={counterPergunta !== 0 && !gameOver}>
+        <Modal.Header>
           <Modal.Title>
             {counterPergunta === 0 && 'Tempo esgotado'}
             {gameOver && 'Resposta errada'}
+            {gameWon && 'Você ganhou!!'}
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
@@ -181,17 +192,25 @@ const Game = (props) => {
               `A resposta está e... rrada. A opção certa era ${
                 currentPergunta.alternativas[parseInt(currentPergunta.resposta) - 1]
               }.`}
+            {gameWon && (
+              <Fragment>
+                Parabéns!!! Você ganhou <strong>1 MILHÃO DE REAIS</strong>!
+              </Fragment>
+            )}
           </p>
-          <p>
-            Você ganhou{' '}
-            <strong>
-              {recompensaNivel[currentNivel - 1] / 2 === 500
-                ? '500'
-                : `${(recompensaNivel[currentNivel - 1] / 2).toString().slice(0, -3)} mil`}{' '}
-              reais
-            </strong>
-            ! Ma oeee, senta lá!
-          </p>
+          {(counterPergunta === 0 || gameOver) && (
+            <p>
+              Você ganhou{' '}
+              <strong>
+                {recompensaNivel[currentNivel - 1] / 2 === 500
+                  ? '500'
+                  : `${(recompensaNivel[currentNivel - 1] / 2).toString().slice(0, -3)} mil`}{' '}
+                reais
+              </strong>
+              ! Ma oeee, senta lá!
+            </p>
+          )}
+
           <div className='text-center mt-5'>
             <Button
               className='btn btn-primary'
