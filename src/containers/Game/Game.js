@@ -1,16 +1,18 @@
 import React, { useState, useEffect, Fragment } from 'react';
 
 import classnames from 'classnames';
+import confetti from 'canvas-confetti';
+
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
-import confetti from 'canvas-confetti';
 
 import './Game.css';
 import logo from './logo.png';
 import { bancoPerguntas } from '../../data/perguntas';
+import { recompensaPorNivel } from '../../data/recompensas';
 
 const Game = (props) => {
   // States
@@ -34,32 +36,13 @@ const Game = (props) => {
 
   const [respostaCerta, setRespostaCerta] = useState(false);
 
-  const recompensaNivel = [
-    1000,
-    2000,
-    3000,
-    4000,
-    5000,
-    10000,
-    20000,
-    30000,
-    40000,
-    50000,
-    100000,
-    200000,
-    300000,
-    400000,
-    500000,
-    1000000,
-  ];
-
   // Divide perguntas em faceis, medias e dificeis
   useEffect(() => {
     const perguntas = [...bancoPerguntas];
     setPerguntasFaceis(perguntas.splice(0, 100));
     setPerguntasMedias(perguntas.splice(0, 100));
     setPerguntasDificeis(perguntas.splice(0, 100));
-    setCurrentNivel(15);
+    setCurrentNivel(1);
     setTimerInicio(
       setInterval(() => {
         setCounterInicio((c) => c - 1);
@@ -202,9 +185,11 @@ const Game = (props) => {
             <p>
               Você ganhou{' '}
               <strong>
-                {recompensaNivel[currentNivel - 1] / 2 === 500
+                {recompensaPorNivel[currentNivel - 1] / 2 === 500
                   ? '500'
-                  : `${(recompensaNivel[currentNivel - 1] / 2).toString().slice(0, -3)} mil`}{' '}
+                  : `${(recompensaPorNivel[currentNivel - 1] / 2)
+                      .toString()
+                      .slice(0, -3)} mil`}{' '}
                 reais
               </strong>
               ! Ma oeee, senta lá!
@@ -263,16 +248,16 @@ const Game = (props) => {
                     <Col xs='auto' className='mx-auto'>
                       <div className='text-center projecoes'>
                         <div className='valor'>
-                          {recompensaNivel[currentNivel - 1] / 2 === 500
+                          {recompensaPorNivel[currentNivel - 1] / 2 === 500
                             ? '500'
-                            : (recompensaNivel[currentNivel - 1] / 2).toString().slice(0, -3) +
+                            : (recompensaPorNivel[currentNivel - 1] / 2).toString().slice(0, -3) +
                               ' MIL'}
                         </div>
                         <p className='opcao'>ERRAR</p>
                       </div>
                       <div className='text-center projecoes'>
                         <div className='valor'>
-                          {recompensaNivel[currentNivel - 1].toString().slice(0, -3) + ' MIL'}
+                          {recompensaPorNivel[currentNivel - 1].toString().slice(0, -3) + ' MIL'}
                         </div>
                         <p
                           className='opcao'
@@ -280,7 +265,7 @@ const Game = (props) => {
                           onClick={() => {
                             if (
                               window.confirm(
-                                `Tem certeza de que deseja parar? Você ganhará ${recompensaNivel[
+                                `Tem certeza de que deseja parar? Você ganhará ${recompensaPorNivel[
                                   currentNivel - 1
                                 ]
                                   .toString()
@@ -296,7 +281,7 @@ const Game = (props) => {
                       <div className='text-center projecoes'>
                         <div className='valor'>
                           {currentNivel < 15
-                            ? recompensaNivel[currentNivel].toString().slice(0, -3) + ' MIL'
+                            ? recompensaPorNivel[currentNivel].toString().slice(0, -3) + ' MIL'
                             : '1 MILHÃO'}
                         </div>
                         <p className='opcao'>ACERTAR</p>
