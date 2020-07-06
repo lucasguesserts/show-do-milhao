@@ -1,0 +1,112 @@
+section.game.background {
+  background: rgb(4, 5, 52);
+  background: linear-gradient(
+    135deg,
+    rgba(4, 5, 52, 1) 35%,
+    rgba(1, 38, 181, 1) 50%,
+    rgba(4, 5, 52, 1) 65%
+  );
+  position: relative;
+}
+
+section.game.background .timer-pergunta {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  background: #fff;
+  border-radius: 5px;
+  border: 1px solid #b0110b;
+  color: #b0110b;
+  font-size: 2.5rem;
+  padding: 0.2rem 2rem;
+  z-index: 1000;
+  font-weight: 700;
+}
+
+section.game .game-control {
+  min-height: 100vh;
+  text-align: center;
+}
+
+section.game .game-control .contador-perguntas > p {
+  font-size: 1.5rem;
+  margin-top: 1rem;
+}
+
+section.game .game-control .pergunta,
+section.game .game-control .alternativa {
+  background: linear-gradient(
+      to bottom,
+      rgba(96, 12, 2, 0.5),
+      rgba(146, 25, 8, 0.4),
+      rgba(221, 71, 20, 0.3)
+    ),
+    linear-gradient(45deg, #600c02 24%, #921908 44%, #dd4714 56%, #921908 76%, #600c02 100%);
+  border: 2px solid #fff;
+  border-radius: 5px;
+  padding: 1.2rem;
+  color: #e4e4e4;
+}
+
+section.game .game-control .pergunta {
+  font-size: 1.5rem;
+  max-width: 600px;
+  margin: 2rem auto 3rem auto;
+}
+
+section.game .game-control .pergunta > p {
+  font-weight: 500;
+}
+
+section.game .game-control .alternativa {
+  position: relative;
+  font-size: 1.2rem;
+  max-width: 450px;
+  margin: 1rem auto;
+  cursor: pointer;
+}
+section.game .game-control .alternativa.certa.highlight {
+  background: #24d201;
+}
+section.game .game-control .alternativa:hover {
+  background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+    linear-gradient(45deg, #600c02 24%, #921908 44%, #dd4714 56%, #921908 76%, #600c02 100%);
+}
+
+section.game .game-control .alternativa span.numero-alternativa {
+  position: absolute;
+  left: 8px;
+  width: 45px;
+  height: 45px;
+  background-color: #fff;
+  border-radius: 100%;
+  display: inline-block;
+  transform: translateY(-10px);
+  padding: 3px;
+  color: #010336;
+  font-weight: 700;
+  border: 2px solid #010336;
+  font-size: 1.5rem;
+}
+
+section.game .game-control .projecoes {
+  max-width: 160px;
+  margin: 0.4rem 2rem;
+  font-weight: 700;
+  display: inline-block;
+  cursor: default;
+}
+
+section.game .game-control .projecoes .valor {
+  border-radius: 5px;
+  background-color: #fae316;
+  color: #b0110b;
+  padding: 0.2rem 0.5rem;
+  font-size: 2rem;
+  min-width: 100px;
+}
+section.game .game-control .projecoes .opcao {
+  color: #fff;
+  margin-top: 5px;
+  font-size: 1.5rem;
+}

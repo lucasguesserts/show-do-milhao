@@ -1,0 +1,33 @@
+section.home.background {
+  background-image: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)), url('./background.jpg');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+}
+
+section.home a {
+  color: inherit;
+  text-decoration: underline;
+}
+
+section.home p {
+  text-align: justify;
+  margin: 0;
+}
+
+section.home .home-control {
+  height: 100vh;
+  text-align: center;
+  display: flex;
+  align-items: center;
+}
+
+section.home button.btn {
+  margin-top: 2rem;
+  border-radius: 100px;
+  font-size: 2rem;
+  padding: 1rem 2rem;
+  border: 3px solid #fff;
+  background-color: #ab0d06;
+  color: #fff;
+}
