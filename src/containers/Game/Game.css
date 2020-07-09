@@ -1,11 +1,6 @@
 section.game.background {
-  background: rgb(4, 5, 52);
-  background: linear-gradient(
-    135deg,
-    rgba(4, 5, 52, 1) 35%,
-    rgba(1, 38, 181, 1) 50%,
-    rgba(4, 5, 52, 1) 65%
-  );
+  background: linear-gradient(45deg, rgba(0, 0, 0, 0.8), rgba(1, 38, 181, 0.1), rgba(0, 0, 0, 0.8)),
+    linear-gradient(152deg, rgba(4, 5, 52, 1) 35%, rgba(1, 38, 181, 1) 50%, rgba(4, 5, 52, 1) 65%);
   position: relative;
 }
 
@@ -21,13 +16,16 @@ section.game.background .timer-pergunta {
   padding: 0.2rem 2rem;
   z-index: 1000;
   font-weight: 700;
+  cursor: default;
 }
 
 section.game .game-control {
   min-height: 100vh;
   text-align: center;
 }
-
+section.game .game-control .contador-perguntas {
+  cursor: default;
+}
 section.game .game-control .contador-perguntas > p {
   font-size: 1.5rem;
   margin-top: 1rem;
@@ -46,12 +44,13 @@ section.game .game-control .alternativa {
   border-radius: 5px;
   padding: 1.2rem;
   color: #e4e4e4;
+  cursor: default;
 }
 
 section.game .game-control .pergunta {
   font-size: 1.5rem;
   max-width: 600px;
-  margin: 2rem auto 3rem auto;
+  margin: 1.5rem auto 2rem auto;
 }
 
 section.game .game-control .pergunta > p {
@@ -89,6 +88,27 @@ section.game .game-control .alternativa span.numero-alternativa {
   font-size: 1.5rem;
 }
 
+section.game .game-control .opcoes {
+  max-width: 160px;
+  display: inline;
+}
+section.game .game-control .opcoes .opcao {
+  margin: 0.4rem 1.2rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-block;
+  border: 1px solid black;
+  border-radius: 100px;
+  background-color: #e1e1e1;
+  color: #111;
+  padding: 0.2rem 1.5rem;
+  font-size: 1.2rem;
+  min-width: 100px;
+}
+section.game .game-control .opcoes .opcao:hover {
+  background-color: #888;
+}
+
 section.game .game-control .projecoes {
   max-width: 160px;
   margin: 0.4rem 2rem;
@@ -109,4 +129,5 @@ section.game .game-control .projecoes .opcao {
   color: #fff;
   margin-top: 5px;
   font-size: 1.5rem;
+  cursor: pointer;
 }

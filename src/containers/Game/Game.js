@@ -6,15 +6,15 @@ import confetti from 'canvas-confetti';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 
-import './Game.css';
-import logo from './logo.png';
 import { bancoPerguntas } from '../../data/perguntas';
 import { recompensaPorNivel } from '../../data/recompensas';
+import './Game.css';
+import logo from './logo.png';
+import UnclosableModal from '../../components/UnclosableModal';
 
-const Game = (props) => {
+const Game = ({ setGameStarted }) => {
   // States
   const [perguntasFaceis, setPerguntasFaceis] = useState(null);
   const [perguntasMedias, setPerguntasMedias] = useState(null);
@@ -36,12 +36,52 @@ const Game = (props) => {
 
   const [respostaCerta, setRespostaCerta] = useState(false);
 
+  const [pularDisponiveis, setPularDisponiveis] = useState(3);
+
   // Divide perguntas em faceis, medias e dificeis
-  useEffect(() => {
+  const dividePerguntas = () => {
     const perguntas = [...bancoPerguntas];
     setPerguntasFaceis(perguntas.splice(0, 100));
     setPerguntasMedias(perguntas.splice(0, 100));
     setPerguntasDificeis(perguntas.splice(0, 100));
+  };
+
+  // Seleciona pergunta aleatoria
+  const getPerguntaAleatoria = (currentNivel) => {
+    let perguntasArr, pergunta, randomIndex;
+    if (currentNivel < 6) {
+      perguntasArr = [...perguntasFaceis];
+      randomIndex = Math.floor(Math.random() * perguntasArr.length);
+      pergunta = perguntasArr.splice(randomIndex, 1)[0];
+      setPerguntasFaceis(perguntasArr);
+    } else if (currentNivel < 11) {
+      perguntasArr = [...perguntasMedias];
+      randomIndex = Math.floor(Math.random() * perguntasArr.length);
+      pergunta = perguntasArr.splice(randomIndex, 1)[0];
+      setPerguntasMedias(perguntasArr);
+    } else if (currentNivel < 16) {
+      perguntasArr = [...perguntasDificeis];
+      randomIndex = Math.floor(Math.random() * perguntasArr.length);
+      pergunta = perguntasArr.splice(randomIndex, 1)[0];
+      setPerguntasDificeis(perguntasArr);
+    }
+    setCurrentPergunta(pergunta);
+  };
+
+  // Inicia o contador do tempo do usuário
+  const iniciaTimerPergunta = () => {
+    clearInterval(timerPergunta);
+    setCounterPergunta(30);
+    setTimerPergunta(
+      setInterval(() => {
+        setCounterPergunta((c) => c - 1);
+      }, 1000)
+    );
+  };
+
+  // Inicia o jogo
+  useEffect(() => {
+    dividePerguntas();
     setCurrentNivel(1);
     setTimerInicio(
       setInterval(() => {
@@ -50,81 +90,50 @@ const Game = (props) => {
     );
   }, []);
 
-  // Para o contador de inicio quando chega a zero
+  // Para os timers se chegarem a zero
   useEffect(() => {
     if (counterInicio === 0) {
       clearInterval(timerInicio);
-      setTimerInicio(null);
-      setTimerPergunta(
-        setInterval(() => {
-          setCounterPergunta((c) => c - 1);
-        }, 1000)
-      );
+      getPerguntaAleatoria(currentNivel);
+      iniciaTimerPergunta();
     }
   }, [counterInicio]);
 
-  // Para o contador de pergunta quando chega a zero
   useEffect(() => {
     if (counterPergunta === 0) {
       clearInterval(timerPergunta);
-      setTimerPergunta(null);
       setShowModal(true);
     }
   }, [counterPergunta]);
 
-  // Seleciona nova pergunta quando o nível muda
-  useEffect(() => {
-    const getPerguntaAleatoria = (dificuldade) => {
-      if (perguntasFaceis && perguntasMedias && perguntasDificeis) {
-        let perguntasArr, pergunta, randomIndex;
-        switch (dificuldade) {
-          case 'Fácil':
-            perguntasArr = [...perguntasFaceis];
-            randomIndex = Math.floor(Math.random() * perguntasArr.length);
-            pergunta = perguntasArr.splice(randomIndex, 1)[0];
-            setPerguntasFaceis(perguntasArr);
-            return pergunta;
-          case 'Média':
-            perguntasArr = [...perguntasMedias];
-            randomIndex = Math.floor(Math.random() * perguntasArr.length);
-            pergunta = perguntasArr.splice(randomIndex, 1)[0];
-            setPerguntasMedias(perguntasArr);
-            return pergunta;
-          case 'Difícil':
-            perguntasArr = [...perguntasDificeis];
-            randomIndex = Math.floor(Math.random() * perguntasArr.length);
-            pergunta = perguntasArr.splice(randomIndex, 1)[0];
-            setPerguntasDificeis(perguntasArr);
-            return pergunta;
-          default:
-            return new Error('Dificuldade não encontrada');
-        }
-      }
-    };
-
-    if (currentNivel <= 5) {
-      const perguntaFacil = getPerguntaAleatoria('Fácil');
-      setCurrentPergunta(perguntaFacil);
-    } else if (currentNivel <= 10) {
-      const perguntaMedia = getPerguntaAleatoria('Média');
-      setCurrentPergunta(perguntaMedia);
+  // Passa de nivel
+  const passaNivel = () => {
+    if (currentNivel === 15) {
+      setShowModal(true);
+      setGameWon(true);
+      confetti({
+        particleCount: 200,
+      });
     } else {
-      const perguntaDificil = getPerguntaAleatoria('Difícil');
-      setCurrentPergunta(perguntaDificil);
+      setCurrentNivel((c) => c + 1);
+      getPerguntaAleatoria(currentNivel);
+      iniciaTimerPergunta();
     }
-  }, [currentNivel]);
+  };
 
   // Responde pergunta
   const responderPergunta = (resposta) => {
     clearInterval(timerPergunta);
     if (currentPergunta.resposta === resposta.toString()) {
-      const myInterval = setInterval(() => {
+      // pisca resposta certa
+      const highlightInterval = setInterval(() => {
         setRespostaCerta((r) => !r);
       }, 80);
+      // depois de 1.5s passa para proxima
       setTimeout(() => {
-        clearInterval(myInterval);
+        clearInterval(highlightInterval);
         setRespostaCerta(false);
-        proximaPergunta();
+        passaNivel();
       }, 1500);
     } else {
       setGameOver(true);
@@ -132,86 +141,72 @@ const Game = (props) => {
     }
   };
 
-  // Passa o proximo nivel e zera o timer
-  const proximaPergunta = () => {
-    if (currentNivel === 15) {
-      confetti({
-        particleCount: 200,
-      });
-      setShowModal(true);
-      setGameWon(true);
-    } else {
-      setCurrentNivel((cn) => cn + 1);
-      setCounterPergunta(30);
-      setTimerPergunta(
-        setInterval(() => {
-          setCounterPergunta((c) => c - 1);
-        }, 1000)
-      );
-    }
+  // Pula a pergunta
+  const pularPergunta = () => {
+    setPularDisponiveis((p) => p - 1);
+    getPerguntaAleatoria(currentNivel);
+    iniciaTimerPergunta();
   };
 
   // Render
   return (
     <section className='game background'>
-      <div className='timer-pergunta'>{counterPergunta}</div>
-      <Modal
+      <UnclosableModal
+        title={
+          counterPergunta === 0
+            ? 'Tempo esgotado'
+            : gameOver
+            ? 'Resposta errada'
+            : gameWon
+            ? 'Você ganhou!!'
+            : ''
+        }
         show={showModal}
-        onHide={() => setShowModal(false)}
-        centered
-        backdrop='static'
-        keyboard={false}>
-        <Modal.Header>
-          <Modal.Title>
-            {counterPergunta === 0 && 'Tempo esgotado'}
-            {gameOver && 'Resposta errada'}
-            {gameWon && 'Você ganhou!!'}
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <p>
-            {counterPergunta === 0 && 'Sinto muito, o seu tempo acabou.'}
-            {gameOver &&
-              `A resposta está e... rrada. A opção certa era ${
-                currentPergunta.alternativas[parseInt(currentPergunta.resposta) - 1]
-              }.`}
-            {gameWon && (
-              <Fragment>
-                Parabéns!!! Você ganhou <strong>1 MILHÃO DE REAIS</strong>!
-              </Fragment>
-            )}
-          </p>
-          {(counterPergunta === 0 || gameOver) && (
-            <p>
-              Você ganhou{' '}
-              <strong>
-                {recompensaPorNivel[currentNivel - 1] / 2 === 500
-                  ? '500'
-                  : `${(recompensaPorNivel[currentNivel - 1] / 2)
-                      .toString()
-                      .slice(0, -3)} mil`}{' '}
-                reais
-              </strong>
-              ! Ma oeee, senta lá!
-            </p>
+        setShow={setShowModal}>
+        <p>
+          {counterPergunta === 0 &&
+            `Sinto muito, o seu tempo acabou. A opção certa era ${
+              currentPergunta.alternativas[parseInt(currentPergunta.resposta) - 1]
+            }.`}
+          {gameOver &&
+            `A resposta está e... rrada. A opção certa era ${
+              currentPergunta.alternativas[parseInt(currentPergunta.resposta) - 1]
+            }.`}
+          {gameWon && (
+            <Fragment>
+              Parabéns!!! Você ganhou <strong>1 MILHÃO DE REAIS</strong>!
+            </Fragment>
           )}
+        </p>
+        {(counterPergunta === 0 || gameOver) && (
+          <p>
+            Você ganhou{' '}
+            <strong>
+              {currentNivel === 1
+                ? '500'
+                : `${(recompensaPorNivel[currentNivel] / 2).toString().slice(0, -3)} mil`}{' '}
+              reais
+            </strong>
+            ! Ma oeee, senta lá!
+          </p>
+        )}
 
-          <div className='text-center mt-5'>
-            <Button
-              className='btn btn-primary'
-              onClick={() => {
-                props.setGameStarted(false);
-              }}>
-              Jogar novamente
-            </Button>
-          </div>
-        </Modal.Body>
-      </Modal>
-      <Container className='py-5'>
+        <div className='text-center mt-5'>
+          <Button
+            className='btn btn-primary'
+            onClick={() => {
+              setGameStarted(false);
+            }}>
+            Jogar novamente
+          </Button>
+        </div>
+      </UnclosableModal>
+      <div className='timer-pergunta'>{counterPergunta}</div>
+      <Container className='py-4'>
         <Row>
           <Col>
             <div className='game-control text-center'>
-              <img src={logo} alt='logo-show-do-milhao img-fluid' style={{ maxWidth: '250px' }} />
+              <img src={logo} alt='logo-show-do-milhao img-fluid' style={{ maxWidth: '240px' }} />
               {counterInicio === 0 && (
                 <div className='contador-perguntas'>
                   <p className='text-light'>PERGUNTA NÚMERO {currentNivel}</p>
@@ -225,7 +220,7 @@ const Game = (props) => {
                 </p>
               </div>
 
-              {counterInicio === 0 && (
+              {counterInicio === 0 && currentPergunta && (
                 <Fragment>
                   <div className='alternativas text-center'>
                     {currentPergunta.alternativas.map((alternativa, i) => (
@@ -244,36 +239,45 @@ const Game = (props) => {
                     ))}
                   </div>
 
+                  <Row className='mt-4'>
+                    <Col xs='auto' className='mx-auto'>
+                      <div className='text-center opcoes'>
+                        {pularDisponiveis > 0 && (
+                          <div className='opcao' onClick={pularPergunta}>
+                            PULAR ({pularDisponiveis})
+                          </div>
+                        )}
+                      </div>
+                    </Col>
+                  </Row>
+
                   <Row className='mt-5'>
                     <Col xs='auto' className='mx-auto'>
                       <div className='text-center projecoes'>
                         <div className='valor'>
-                          {recompensaPorNivel[currentNivel - 1] / 2 === 500
+                          {recompensaPorNivel[currentNivel] / 2 === 500
                             ? '500'
-                            : (recompensaPorNivel[currentNivel - 1] / 2).toString().slice(0, -3) +
+                            : (recompensaPorNivel[currentNivel] / 2).toString().slice(0, -3) +
                               ' MIL'}
                         </div>
                         <p className='opcao'>ERRAR</p>
                       </div>
                       <div className='text-center projecoes'>
                         <div className='valor'>
-                          {recompensaPorNivel[currentNivel - 1].toString().slice(0, -3) + ' MIL'}
+                          {recompensaPorNivel[currentNivel].toString().slice(0, -3) + ' MIL'}
                         </div>
                         <p
                           className='opcao'
-                          style={{ cursor: 'pointer' }}
                           onClick={() => {
                             if (
                               window.confirm(
-                                `Tem certeza de que deseja parar? Você ganhará ${recompensaPorNivel[
-                                  currentNivel - 1
-                                ]
+                                `Tem certeza de que deseja parar?
+                                Você ganhará ${recompensaPorNivel[currentNivel]
                                   .toString()
                                   .slice(0, -3)} mil reais.`
                               )
-                            ) {
-                              props.setGameStarted(false);
-                            }
+                            )
+                              setGameStarted(false);
                           }}>
                           PARAR
                         </p>
@@ -281,7 +285,7 @@ const Game = (props) => {
                       <div className='text-center projecoes'>
                         <div className='valor'>
                           {currentNivel < 15
-                            ? recompensaPorNivel[currentNivel].toString().slice(0, -3) + ' MIL'
+                            ? recompensaPorNivel[currentNivel + 1].toString().slice(0, -3) + ' MIL'
                             : '1 MILHÃO'}
                         </div>
                         <p className='opcao'>ACERTAR</p>
@@ -297,7 +301,5 @@ const Game = (props) => {
     </section>
   );
 };
-
-Game.propTypes = {};
 
 export default Game;
