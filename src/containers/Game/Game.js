@@ -14,7 +14,7 @@ import './Game.css';
 import logo from './logo.png';
 import UnclosableModal from '../../components/UnclosableModal';
 
-const acertos_para_ganhar = 2
+const acertos_para_ganhar = 10
 
 const Game = ({ setGameStarted }) => {
   // States
@@ -29,9 +29,10 @@ const Game = ({ setGameStarted }) => {
   const [counterInicio, setCounterInicio] = useState(3);
 
   const [timerPergunta, setTimerPergunta] = useState(null);
-  const [counterPergunta, setCounterPergunta] = useState(30);
+  const [counterPergunta, setCounterPergunta] = useState(1);
 
   const [showModal, setShowModal] = useState(false);
+  const [showPrompt, setShowPrompt] = useState(false);
 
   const [gameOver, setGameOver] = useState(false);
   const [gameWon, setGameWon] = useState(false);
@@ -80,6 +81,10 @@ const Game = ({ setGameStarted }) => {
       }, 1000)
     );
   };
+  // Para o contador do tempo do usuário
+  const paraTimerPergunta = () => {
+    clearInterval(timerPergunta);
+  };
 
   // Inicia o jogo
   useEffect(() => {
@@ -96,8 +101,7 @@ const Game = ({ setGameStarted }) => {
   useEffect(() => {
     if (counterInicio === 0) {
       clearInterval(timerInicio);
-      getPerguntaAleatoria(currentNivel);
-      iniciaTimerPergunta();
+      continueGame();
     }
   }, [counterInicio]);
 
@@ -117,9 +121,8 @@ const Game = ({ setGameStarted }) => {
         particleCount: 200,
       });
     } else {
-      setCurrentNivel((c) => c + 1);
-      getPerguntaAleatoria(currentNivel);
-      iniciaTimerPergunta();
+      clearInterval(timerPergunta);
+      setShowPrompt(true);
     }
   };
 
@@ -146,13 +149,35 @@ const Game = ({ setGameStarted }) => {
   // Pula a pergunta
   const pularPergunta = () => {
     setPularDisponiveis((p) => p - 1);
-    getPerguntaAleatoria(currentNivel);
+    setShowPrompt(true);
+    continueGame();
+  };
+
+  // Continue game when prompt is dismissed
+  const continueGame = () => {
+    setShowPrompt(false);
+    setCurrentNivel((c) => c + 1);
+    getPerguntaAleatoria(currentNivel + 1);
     iniciaTimerPergunta();
   };
 
   // Render
   return (
     <section className='game background'>
+      {showPrompt && (
+        <div className="prompt-modal">
+          <div className="prompt-content">
+            <h3>Pronto para a próxima pergunta?</h3>
+            <p>Clique em "Continuar" quando estiver pronto.</p>
+            <Button
+              className="btn btn-primary"
+              onClick={continueGame}
+            >
+              Continuar
+            </Button>
+          </div>
+        </div>
+      )}
       <UnclosableModal
         title={
           counterPergunta === 0
