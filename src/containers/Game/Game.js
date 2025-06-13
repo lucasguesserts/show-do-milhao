@@ -25,7 +25,7 @@ const Game = ({ setGameStarted }) => {
   const [currentPergunta, setCurrentPergunta] = useState(null);
   const [currentNivel, setCurrentNivel] = useState(0);
 
-  const [counterInicio, setCounterInicio] = useState(3);
+  const [counterInicio, setCounterInicio] = useState(1); // this guarantees that the questions are loaded before continueGame() is called
 
   const [timerPergunta, setTimerPergunta] = useState(null);
   const [counterPergunta, setCounterPergunta] = useState(1);
@@ -228,20 +228,18 @@ const Game = ({ setGameStarted }) => {
           <Col>
             <div className='game-control text-center'>
               <img src={logo} alt='logo-show-do-milhao img-fluid' style={{ maxWidth: '240px' }} />
-              {counterInicio === 0 && (
+              {(
                 <div className='contador-perguntas'>
                   <p className='text-light'>PERGUNTA NÚMERO {currentNivel}</p>
                 </div>
               )}
               <div className='pergunta'>
                 <p className='m-0'>
-                  {counterInicio !== 0
-                    ? counterInicio
-                    : currentPergunta && currentPergunta.pergunta}
+                  {currentPergunta && currentPergunta.pergunta}
                 </p>
               </div>
 
-              {counterInicio === 0 && currentPergunta && (
+              {currentPergunta && (
                 <Fragment>
                   <div className='alternativas text-center'>
                     {currentPergunta.alternativas.map((alternativa, i) => (
