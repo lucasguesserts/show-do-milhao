@@ -15,6 +15,7 @@ import logo from './logo.png';
 import UnclosableModal from '../../components/UnclosableModal';
 
 const acertos_para_ganhar = 3;
+const tempo_para_responder_pergunta = 30;
 
 const Game = ({ setGameStarted }) => {
   // States
@@ -31,7 +32,8 @@ const Game = ({ setGameStarted }) => {
   const [counterPergunta, setCounterPergunta] = useState(1);
 
   const [showModal, setShowModal] = useState(false);
-  const [showPrompt, setShowPrompt] = useState(false);
+  const [showNextQuestionPrompt, setShowNextQuestionPrompt] = useState(false);
+  const [showCardsPrompt, setShowCardsPrompt] = useState(false);
 
   const [gameOver, setGameOver] = useState(false);
   const [gameWon, setGameWon] = useState(false);
@@ -39,6 +41,7 @@ const Game = ({ setGameStarted }) => {
   const [respostaCerta, setRespostaCerta] = useState(false);
 
   const [pularDisponiveis, setPularDisponiveis] = useState(3);
+  const [cartasDisponiveis, setCartasDisponiveis] = useState(1);
 
   // Divide perguntas em faceis, medias e dificeis
   const dividePerguntas = () => {
@@ -73,16 +76,12 @@ const Game = ({ setGameStarted }) => {
   // Inicia o contador do tempo do usuário
   const iniciaTimerPergunta = () => {
     clearInterval(timerPergunta);
-    setCounterPergunta(30);
+    setCounterPergunta(tempo_para_responder_pergunta);
     setTimerPergunta(
       setInterval(() => {
         setCounterPergunta((c) => c - 1);
       }, 1000)
     );
-  };
-  // Para o contador do tempo do usuário
-  const paraTimerPergunta = () => {
-    clearInterval(timerPergunta);
   };
 
   // Inicia o jogo
@@ -116,7 +115,7 @@ const Game = ({ setGameStarted }) => {
       });
     } else {
       clearInterval(timerPergunta);
-      setShowPrompt(true);
+      setShowNextQuestionPrompt(true);
     }
   };
 
@@ -144,22 +143,33 @@ const Game = ({ setGameStarted }) => {
   const pularPergunta = () => {
     setPularDisponiveis((p) => p - 1);
     clearInterval(timerPergunta);
-    setShowPrompt(true);
+    setShowNextQuestionPrompt(true);
     setCurrentNivel((c) => c - 1);
   };
 
   // Continue game when prompt is dismissed
   const continueGame = () => {
-    setShowPrompt(false);
+    setShowNextQuestionPrompt(false);
     setCurrentNivel((c) => c + 1);
     getPerguntaAleatoria(currentNivel + 1);
+    iniciaTimerPergunta();
+  };
+
+  const usarCartas = () => {
+    setCartasDisponiveis((c) => c - 1);
+    clearInterval(timerPergunta);
+    setShowCardsPrompt(true);
+  };
+
+  const cartasResumeGame = () => {
+    setShowCardsPrompt(false);
     iniciaTimerPergunta();
   };
 
   // Render
   return (
     <section className='game background'>
-      {showPrompt && (
+      {showNextQuestionPrompt && (
         <div className="prompt-modal">
           <div className="prompt-content">
             <h3>Pronto para a próxima pergunta?</h3>
@@ -169,6 +179,21 @@ const Game = ({ setGameStarted }) => {
             <Button
               className="btn btn-primary"
               onClick={continueGame}
+            >
+              Continuar
+            </Button>
+          </div>
+        </div>
+      )}
+      {showCardsPrompt && (
+        <div className="prompt-modal">
+          <div className="prompt-content">
+            <h3>Você escolheu Cartas</h3>
+            <p>A sua carta contém o número {Math.floor(Math.random() * 4)}</p>
+            <p>Clique em "Continuar" para responder à pergunta.</p>
+            <Button
+              className="btn btn-primary"
+              onClick={cartasResumeGame}
             >
               Continuar
             </Button>
@@ -271,6 +296,11 @@ const Game = ({ setGameStarted }) => {
                         {currentNivel < acertos_para_ganhar && pularDisponiveis > 0 && (
                           <div className='opcao' onClick={pularPergunta}>
                             PULAR ({pularDisponiveis})
+                          </div>
+                        )}
+                        {currentNivel < acertos_para_ganhar && cartasDisponiveis > 0 && (
+                          <div className='opcao' onClick={usarCartas}>
+                            CARTAS ({cartasDisponiveis})
                           </div>
                         )}
                       </div>
