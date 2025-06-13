@@ -14,7 +14,7 @@ import './Game.css';
 import logo from './logo.png';
 import UnclosableModal from '../../components/UnclosableModal';
 
-const acertos_para_ganhar = 10
+const acertos_para_ganhar = 2;
 
 const Game = ({ setGameStarted }) => {
   // States
@@ -25,7 +25,6 @@ const Game = ({ setGameStarted }) => {
   const [currentPergunta, setCurrentPergunta] = useState(null);
   const [currentNivel, setCurrentNivel] = useState(0);
 
-  const [timerInicio, setTimerInicio] = useState(null);
   const [counterInicio, setCounterInicio] = useState(3);
 
   const [timerPergunta, setTimerPergunta] = useState(null);
@@ -89,18 +88,13 @@ const Game = ({ setGameStarted }) => {
   // Inicia o jogo
   useEffect(() => {
     dividePerguntas();
-    setCurrentNivel(1);
-    setTimerInicio(
-      setInterval(() => {
-        setCounterInicio((c) => c - 1);
-      }, 1000)
-    );
+    setCurrentNivel(0); // start at 0 so that continueGame() will start at 1
+    setCounterInicio(0);
   }, []);
 
   // Para os timers se chegarem a zero
   useEffect(() => {
     if (counterInicio === 0) {
-      clearInterval(timerInicio);
       continueGame();
     }
   }, [counterInicio]);
