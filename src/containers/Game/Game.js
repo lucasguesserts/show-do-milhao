@@ -143,7 +143,8 @@ const Game = ({ setGameStarted }) => {
   // Pula a pergunta
   const pularPergunta = () => {
     setPularDisponiveis((p) => p - 1);
-    setShowPrompt(true);
+    setShowPrompt(false);
+    setCurrentNivel((c) => c - 1);
     continueGame();
   };
 
@@ -162,7 +163,8 @@ const Game = ({ setGameStarted }) => {
         <div className="prompt-modal">
           <div className="prompt-content">
             <h3>Pronto para a próxima pergunta?</h3>
-            <p>Clique em "Continuar" quando estiver pronto.</p>
+            <p>Você respondeu à pergunta {currentNivel} corretamente.</p>
+            <p>A próxima pergunta será a pergunta {currentNivel + 1} de um total de {acertos_para_ganhar}</p>
             <Button
               className="btn btn-primary"
               onClick={continueGame}
@@ -230,7 +232,11 @@ const Game = ({ setGameStarted }) => {
               <img src={logo} alt='logo-show-do-milhao img-fluid' style={{ maxWidth: '240px' }} />
               {(
                 <div className='contador-perguntas'>
-                  <p className='text-light'>PERGUNTA NÚMERO {currentNivel}</p>
+                  {currentNivel !== acertos_para_ganhar ? (
+                    <p className='text-light'>Pergunta Número {currentNivel}</p>
+                  ) : (
+                    <p className='text-light'>Última Pergunta</p>
+                  )}
                 </div>
               )}
               <div className='pergunta'>
@@ -261,7 +267,7 @@ const Game = ({ setGameStarted }) => {
                   <Row className='mt-4'>
                     <Col xs='auto' className='mx-auto'>
                       <div className='text-center opcoes'>
-                        {pularDisponiveis > 0 && (
+                        {currentNivel < acertos_para_ganhar && pularDisponiveis > 0 && (
                           <div className='opcao' onClick={pularPergunta}>
                             PULAR ({pularDisponiveis})
                           </div>
