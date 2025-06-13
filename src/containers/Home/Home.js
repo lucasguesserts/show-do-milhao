@@ -17,25 +17,7 @@ const Home = (props) => {
         <Row>
           <Col>
             <div className='home-control'>
-              <div style={{ maxWidth: '320px', margin: 'auto' }}>
-                <div
-                  style={{
-                    backgroundColor: 'rgba(0,0,0,0.7)',
-                    padding: '0.8rem',
-                    borderRadius: '10px',
-                  }}>
-                  <p className='text-light'>
-                    Seja bem vindo ao Show do Milhão! Este é um projeto experimental, desenvolvido
-                    com React por{' '}
-                    <a
-                      target='_blank'
-                      rel='noopener noreferrer'
-                      href='https://github.com/igorschechtel'>
-                      Igor Schechtel
-                    </a>{' '}
-                    para um processo seletivo.
-                  </p>
-                </div>
+              <div style={{ width: '10%', position: 'fixed', bottom: '10%', left: '45%' }}>
                 <button onClick={() => setGameStarted(true)} className='btn'>
                   Começar
                 </button>
