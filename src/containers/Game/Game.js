@@ -14,7 +14,7 @@ import './Game.css';
 import logo from './logo.png';
 import UnclosableModal from '../../components/UnclosableModal';
 
-const acertos_para_ganhar = 2;
+const acertos_para_ganhar = 3;
 
 const Game = ({ setGameStarted }) => {
   // States
@@ -143,9 +143,9 @@ const Game = ({ setGameStarted }) => {
   // Pula a pergunta
   const pularPergunta = () => {
     setPularDisponiveis((p) => p - 1);
-    setShowPrompt(false);
+    clearInterval(timerPergunta);
+    setShowPrompt(true);
     setCurrentNivel((c) => c - 1);
-    continueGame();
   };
 
   // Continue game when prompt is dismissed
@@ -165,6 +165,7 @@ const Game = ({ setGameStarted }) => {
             <h3>Pronto para a próxima pergunta?</h3>
             <p>Você respondeu à pergunta {currentNivel} corretamente.</p>
             <p>A próxima pergunta será a pergunta {currentNivel + 1} de um total de {acertos_para_ganhar}</p>
+            <p>Clique em "Continuar" para passar para a próxima pergunta.</p>
             <Button
               className="btn btn-primary"
               onClick={continueGame}
