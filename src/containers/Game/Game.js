@@ -14,6 +14,8 @@ import './Game.css';
 import logo from './logo.png';
 import UnclosableModal from '../../components/UnclosableModal';
 
+const acertos_para_ganhar = 2
+
 const Game = ({ setGameStarted }) => {
   // States
   const [perguntasFaceis, setPerguntasFaceis] = useState(null);
@@ -108,7 +110,7 @@ const Game = ({ setGameStarted }) => {
 
   // Passa de nivel
   const passaNivel = () => {
-    if (currentNivel === 15) {
+    if (currentNivel === acertos_para_ganhar) {
       setShowModal(true);
       setGameWon(true);
       confetti({
