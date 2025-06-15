@@ -25,7 +25,6 @@ const Game = ({ setGameStarted }) => {
 
   const [currentPergunta, setCurrentPergunta] = useState(null);
   const [currentNivel, setCurrentNivel] = useState(0);
-
   const [counterInicio, setCounterInicio] = useState(1); // this guarantees that the questions are loaded before continueGame() is called
 
   const [timerPergunta, setTimerPergunta] = useState(null);
@@ -41,12 +40,16 @@ const Game = ({ setGameStarted }) => {
   const [respostaCerta, setRespostaCerta] = useState(false);
 
   const [pularDisponiveis, setPularDisponiveis] = useState(3);
+
   const [cartasDisponiveis, setCartasDisponiveis] = useState(1);
+  const [cartaValue, setCartaValue] = useState(null);
+  const [cartaEnabled, setCartaEnabled] = useState(false);
+  const [cardsToDisplay, setCardsToDisplay] = useState(new Set([0, 1, 2, 3]));
 
   // Divide perguntas em faceis, medias e dificeis
   const dividePerguntas = () => {
     const perguntas = [...bancoPerguntas];
-    setPerguntasFaceis(perguntas.splice(0, 100));
+    setPerguntasFaceis(perguntas.splice(0, 8));
     setPerguntasMedias(perguntas.splice(0, 100));
     setPerguntasDificeis(perguntas.splice(0, 100));
   };
@@ -89,6 +92,8 @@ const Game = ({ setGameStarted }) => {
     dividePerguntas();
     setCurrentNivel(0); // start at 0 so that continueGame() will start at 1
     setCounterInicio(0);
+    setCartaValue(Math.floor(Math.random() * 4));
+    setCartaEnabled(false);
   }, []);
 
   // Para os timers se chegarem a zero
@@ -145,6 +150,7 @@ const Game = ({ setGameStarted }) => {
     clearInterval(timerPergunta);
     setShowNextQuestionPrompt(true);
     setCurrentNivel((c) => c - 1);
+    setCartaEnabled(false);
   };
 
   // Continue game when prompt is dismissed
@@ -153,12 +159,23 @@ const Game = ({ setGameStarted }) => {
     setCurrentNivel((c) => c + 1);
     getPerguntaAleatoria(currentNivel + 1);
     iniciaTimerPergunta();
+    setCartaEnabled(false);
   };
 
   const usarCartas = () => {
     setCartasDisponiveis((c) => c - 1);
     clearInterval(timerPergunta);
     setShowCardsPrompt(true);
+    setCartaEnabled(true);
+    const cartaValue = Math.floor(Math.random() * 4);
+    const cardsToDisplay = new Set([]);
+    cardsToDisplay.add(parseInt(currentPergunta.resposta) - 1);
+    while (cardsToDisplay.size < 4 - cartaValue) {
+      const randomIndex = Math.floor(Math.random() * currentPergunta.alternativas.length);
+      cardsToDisplay.add(randomIndex);
+    }
+    setCartaValue(cartaValue);
+    setCardsToDisplay(cardsToDisplay);
   };
 
   const cartasResumeGame = () => {
@@ -174,7 +191,7 @@ const Game = ({ setGameStarted }) => {
           <div className="prompt-content">
             <h3>Pronto para a próxima pergunta?</h3>
             <p>Você respondeu à pergunta {currentNivel} corretamente.</p>
-            <p>A próxima pergunta será a pergunta {currentNivel + 1} de um total de {acertos_para_ganhar}</p>
+            <p>A próxima pergunta será a pergunta {currentNivel + 1} de um total de {acertos_para_ganhar}.</p>
             <p>Clique em "Continuar" para passar para a próxima pergunta.</p>
             <Button
               className="btn btn-primary"
@@ -189,7 +206,10 @@ const Game = ({ setGameStarted }) => {
         <div className="prompt-modal">
           <div className="prompt-content">
             <h3>Você escolheu Cartas</h3>
-            <p>A sua carta contém o número {Math.floor(Math.random() * 4)}</p>
+            <p>A sua carta contém o número {cartaValue}.</p>
+            {cartaValue === 0 && <p>Nenhuma opção será eliminada.</p>}
+            {cartaValue === 1 && <p>{cartaValue} opção será eliminada.</p>}
+            {cartaValue === 2 && <p>{cartaValue} opções serão eliminadas.</p>}
             <p>Clique em "Continuar" para responder à pergunta.</p>
             <Button
               className="btn btn-primary"
@@ -283,6 +303,7 @@ const Game = ({ setGameStarted }) => {
                           certa: i + 1 === parseInt(currentPergunta.resposta),
                           highlight: respostaCerta,
                         })}
+                        style={{ visibility: !cartaEnabled || cardsToDisplay.has(i) ? 'visible' : 'hidden' }}
                         key={i}>
                         <span className='numero-alternativa'>{i + 1}</span>
                         {alternativa}

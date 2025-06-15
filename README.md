@@ -14,7 +14,7 @@ Use the package manager [npm](https://www.npmjs.com/) to install show-do-milhao.
 git clone https://github.com/igorschechtel/show-do-milhao.git
 cd show-do-milhao
 npm install
-npm start
+NODE_OPTIONS=--openssl-legacy-provider npm start
 ```
 
 ## Components
