@@ -9,13 +9,22 @@ import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 
 import { bancoPerguntas } from '../../data/perguntas';
-import { recompensaPorNivel } from '../../data/recompensas';
 import './Game.css';
 import logo from './logo.png';
 import UnclosableModal from '../../components/UnclosableModal';
 
 const acertos_para_ganhar = 3;
+const noPrizeOption = "Chupar o Dedo";
+const recompensaPorNivel = Array(acertos_para_ganhar - 3 + 2).fill(noPrizeOption).concat(["Chocolatinho", "Chocolate", "Chocolatão"]);
 const tempo_para_responder_pergunta = 30;
+
+
+if (acertos_para_ganhar < 3) {
+  throw new Error('acertos_para_ganhar deve ser maior ou igual a 3');
+}
+if (tempo_para_responder_pergunta < 1) {
+  throw new Error('tempo_para_responder_pergunta deve ser maior ou igual a 1');
+}
 
 const Game = ({ setGameStarted }) => {
   // States
@@ -86,6 +95,11 @@ const Game = ({ setGameStarted }) => {
       }, 1000)
     );
   };
+
+  const pararJogo = () => {
+    if (window.confirm(`Tem certeza de que deseja parar? Você ganhará ${recompensaPorNivel[currentNivel+1]}`))
+      setGameStarted(false);
+    }
 
   // Inicia o jogo
   useEffect(() => {
@@ -190,8 +204,6 @@ const Game = ({ setGameStarted }) => {
         <div className="prompt-modal">
           <div className="prompt-content">
             <h3>Pronto para a próxima pergunta?</h3>
-            <p>Você respondeu à pergunta {currentNivel} corretamente.</p>
-            <p>A próxima pergunta será a pergunta {currentNivel + 1} de um total de {acertos_para_ganhar}.</p>
             <p>Clique em "Continuar" para passar para a próxima pergunta.</p>
             <Button
               className="btn btn-primary"
@@ -238,25 +250,18 @@ const Game = ({ setGameStarted }) => {
               currentPergunta.alternativas[parseInt(currentPergunta.resposta) - 1]
             }.`}
           {gameOver &&
-            `A resposta está e... rrada. A opção certa era ${
+            `A resposta está ERRADA. A opção certa era ${
               currentPergunta.alternativas[parseInt(currentPergunta.resposta) - 1]
             }.`}
           {gameWon && (
             <Fragment>
-              Parabéns!!! Você ganhou <strong>1 MILHÃO DE REAIS</strong>!
+              Parabéns!!! Você ganhou {recompensaPorNivel[currentNivel + 1]}!
             </Fragment>
           )}
         </p>
         {(counterPergunta === 0 || gameOver) && (
           <p>
-            Você ganhou{' '}
-            <strong>
-              {currentNivel === 1
-                ? '500'
-                : `${(recompensaPorNivel[currentNivel] / 2).toString().slice(0, -3)} mil`}{' '}
-              reais
-            </strong>
-            ! Ma oeee, senta lá!
+            Você ganhou {recompensaPorNivel[currentNivel + 1]}!
           </p>
         )}
 
@@ -279,7 +284,7 @@ const Game = ({ setGameStarted }) => {
               {(
                 <div className='contador-perguntas'>
                   {currentNivel !== acertos_para_ganhar ? (
-                    <p className='text-light'>Pergunta Número {currentNivel}</p>
+                    <p className='text-light'>Pergunta Número {currentNivel} de {acertos_para_ganhar}</p>
                   ) : (
                     <p className='text-light'>Última Pergunta</p>
                   )}
@@ -331,40 +336,17 @@ const Game = ({ setGameStarted }) => {
                   <Row className='mt-5'>
                     <Col xs='auto' className='mx-auto'>
                       <div className='text-center projecoes'>
-                        <div className='valor'>
-                          {recompensaPorNivel[currentNivel] / 2 === 500
-                            ? '500'
-                            : (recompensaPorNivel[currentNivel] / 2).toString().slice(0, -3) +
-                              ' MIL'}
-                        </div>
+                        <div className='valor'>{noPrizeOption}</div>
                         <p className='opcao'>ERRAR</p>
                       </div>
                       <div className='text-center projecoes'>
-                        <div className='valor'>
-                          {recompensaPorNivel[currentNivel].toString().slice(0, -3) + ' MIL'}
-                        </div>
+                        <div className='valor'>{recompensaPorNivel[currentNivel]}</div>
                         <p
                           className='opcao'
-                          onClick={() => {
-                            if (
-                              window.confirm(
-                                `Tem certeza de que deseja parar?
-                                Você ganhará ${recompensaPorNivel[currentNivel]
-                                  .toString()
-                                  .slice(0, -3)} mil reais.`
-                              )
-                            )
-                              setGameStarted(false);
-                          }}>
-                          PARAR
-                        </p>
+                          onClick={pararJogo}>PARAR</p>
                       </div>
                       <div className='text-center projecoes'>
-                        <div className='valor'>
-                          {currentNivel < 15
-                            ? recompensaPorNivel[currentNivel + 1].toString().slice(0, -3) + ' MIL'
-                            : '1 MILHÃO'}
-                        </div>
+                        <div className='valor'>{recompensaPorNivel[currentNivel + 1]}</div>
                         <p className='opcao'>ACERTAR</p>
                       </div>
                     </Col>
