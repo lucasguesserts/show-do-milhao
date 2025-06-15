@@ -16,7 +16,7 @@ import UnclosableModal from '../../components/UnclosableModal';
 const acertos_para_ganhar = 3;
 const noPrizeOption = "Chupar o Dedo";
 const recompensaPorNivel = Array(acertos_para_ganhar - 3 + 2).fill(noPrizeOption).concat(["Chocolatinho", "Chocolate", "Chocolatão"]);
-const tempo_para_responder_pergunta = 30;
+const tempo_para_responder_pergunta = 300000;
 const tempo_para_pesquisar = 40;
 
 
@@ -329,21 +329,23 @@ const Game = ({ setGameStarted }) => {
         </div>
       </UnclosableModal>
       <div className='timer-pergunta'>{counterPergunta}</div>
-      <Container className='py-4'>
+      <Container>
         <Row>
           <Col>
             <div className='game-control text-center'>
-              <img src={logo} alt='logo-show-do-milhao img-fluid' style={{ maxWidth: '240px' }} />
+              <figure style={{ margin: '0' }}>
+                <img src={logo} alt='logo-show-do-milhao img-fluid' style={{ maxWidth: '240px' }} />
+              </figure>
               {(
                 <div className='contador-perguntas'>
                   {currentNivel !== acertos_para_ganhar ? (
-                    <p className='text-light'>Pergunta Número {currentNivel} de {acertos_para_ganhar}</p>
+                    <p className='text-light' style={{ margin: '0' }}>Pergunta Número {currentNivel} de {acertos_para_ganhar}</p>
                   ) : (
-                    <p className='text-light'>Última Pergunta</p>
+                    <p className='text-light' style={{ margin: '0' }}>Última Pergunta</p>
                   )}
                 </div>
               )}
-              <div className='pergunta'>
+              <div className='pergunta' style={{ margin: '0, auto' }}>
                 <p className='m-0'>
                   {currentPergunta && currentPergunta.pergunta}
                 </p>
@@ -369,9 +371,9 @@ const Game = ({ setGameStarted }) => {
                     ))}
                   </div>
 
-                  <Row className='mt-4'>
-                    <Col xs='auto' className='mx-auto'>
-                      <div className='text-center opcoes'>
+                  <Row className='mt-4' style={{ margin: '0 auto' }}>
+                    <Col xs='auto' className='mx-auto' style={{ margin: '0 auto' }}>
+                      <div className='text-center opcoes' style={{ margin: '0 auto' }}>
                         {currentNivel < acertos_para_ganhar && pularDisponiveis > 0 && (
                           <div className='opcao' onClick={pularPergunta}>
                             PULAR ({pularDisponiveis})
@@ -412,8 +414,8 @@ const Game = ({ setGameStarted }) => {
                     </Col>
                   </Row>
 
-                  <Row className='mt-5'>
-                    <Col xs='auto' className='mx-auto'>
+                  <Row className='mt-5' style={{ margin: '0 auto' }}>
+                    <Col xs='auto' className='mx-auto' style={{ margin: '0 auto' }}>
                       <div className='text-center projecoes'>
                         <div className='valor'>{noPrizeOption}</div>
                         <p className='opcao'>ERRAR</p>

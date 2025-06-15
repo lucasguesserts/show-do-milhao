@@ -88,7 +88,7 @@ section.game .game-control .alternativa {
 
 section.game .game-control .pergunta {
   font-size: 1.5rem;
-  max-width: 600px;
+  max-width: 800px;
   margin: 1.5rem auto 2rem auto;
 }
 
@@ -132,7 +132,7 @@ section.game .game-control .opcoes {
   display: inline;
 }
 section.game .game-control .opcoes .opcao {
-  margin: 0.4rem 1.2rem;
+  margin: 0rem 1rem;
   font-weight: 700;
   cursor: pointer;
   display: inline-block;
@@ -150,7 +150,7 @@ section.game .game-control .opcoes .opcao:hover {
 
 section.game .game-control .projecoes {
   max-width: 160px;
-  margin: 0.4rem 2rem;
+  margin: 0rem 2rem;
   font-weight: 700;
   display: inline-block;
   cursor: default;
@@ -166,7 +166,7 @@ section.game .game-control .projecoes .valor {
 }
 section.game .game-control .projecoes .opcao {
   color: #fff;
-  margin-top: 5px;
+  margin-top: 0px;
   font-size: 1.5rem;
   width: 200px;
   cursor: pointer;
