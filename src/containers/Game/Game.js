@@ -17,6 +17,7 @@ const acertos_para_ganhar = 3;
 const noPrizeOption = "Chupar o Dedo";
 const recompensaPorNivel = Array(acertos_para_ganhar - 3 + 2).fill(noPrizeOption).concat(["Chocolatinho", "Chocolate", "Chocolatão"]);
 const tempo_para_responder_pergunta = 30;
+const tempo_para_pesquisar = 40;
 
 
 if (acertos_para_ganhar < 3) {
@@ -56,6 +57,11 @@ const Game = ({ setGameStarted }) => {
   const [cardsToDisplay, setCardsToDisplay] = useState(new Set([0, 1, 2, 3]));
 
   const [ajudaPlateiaDisponiveis, setAjudaPlateiaDisponiveis] = useState(1);
+
+  const [pesquisaDisponiveis, setPesquisaDisponiveis] = useState(1);
+  const [showPesquisasPrompt, setShowPesquisasPrompt] = useState(false);
+  const [timerPesquisas, setTimerPesquisas] = useState(null);
+  const [counterPesquisas, setCounterPesquisas] = useState(1);
 
   // Divide perguntas em faceis, medias e dificeis
   const dividePerguntas = () => {
@@ -215,6 +221,28 @@ const Game = ({ setGameStarted }) => {
     }
   }
 
+  const iniciaTimerPesquisas = () => {
+    clearInterval(timerPesquisas);
+    setCounterPesquisas(tempo_para_pesquisar);
+    setTimerPesquisas(
+      setInterval(() => {
+        setCounterPesquisas((c) => c - 1);
+      }, 1000)
+    );
+  };
+
+  const usarPesquisa = () => {
+    setPesquisaDisponiveis((p) => p - 1);
+    clearInterval(timerPergunta);
+    setShowPesquisasPrompt(true);
+    setCounterPesquisas(tempo_para_pesquisar);
+  };
+
+  const pesquisasResumeGame = () => {
+    setShowPesquisasPrompt(false);
+    iniciaTimerPergunta();
+  };
+
   // Render
   return (
     <section className='game background'>
@@ -247,6 +275,18 @@ const Game = ({ setGameStarted }) => {
             >
               Continuar
             </Button>
+          </div>
+        </div>
+      )}
+      {showPesquisasPrompt && (
+        <div className="prompt-modal">
+          <div className="prompt-content">
+            <h3>Pronto para pesquisar?</h3>
+            <p>A pergunta é:</p>
+            <blockquote>{currentPergunta.pergunta}</blockquote>
+            <p>Tempo disponível para pesquisa: {counterPesquisas}</p>
+            <p><Button className="btn btn-primary" onClick={iniciaTimerPesquisas}>Iniciar</Button></p>
+            <p><Button className="btn btn-primary" onClick={pesquisasResumeGame}>Responder</Button></p>
           </div>
         </div>
       )}
@@ -345,6 +385,11 @@ const Game = ({ setGameStarted }) => {
                         {currentNivel < acertos_para_ganhar && ajudaPlateiaDisponiveis > 0 && (
                           <div className='opcao' onClick={usarAjudaPlateia}>
                             PLATEIA ({ajudaPlateiaDisponiveis})
+                          </div>
+                        )}
+                        {currentNivel < acertos_para_ganhar && pesquisaDisponiveis > 0 && (
+                          <div className='opcao' onClick={usarPesquisa}>
+                            PESQUISA ({pesquisaDisponiveis})
                           </div>
                         )}
                       </div>
