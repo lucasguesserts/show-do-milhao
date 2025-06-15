@@ -17,11 +17,15 @@ import certaRespostaAudio from '../../data/audio/certa_resposta.mp3';
 import erradaRespostaAudio from '../../data/audio/errada_resposta.mp3';
 import tempoAcabouAudio from '../../data/audio/tempo_acabou.mp3';
 import ticTocAudio from '../../data/audio/tic_toc.mp3';
+import ganhouChocolataoAudio from '../../data/audio/ganhou_chocolatao.mp3';
+import ganhouChocolateAudio from '../../data/audio/ganhou_chocolate.mp3';
+import ganhouChocolatinhoAudio from '../../data/audio/ganhou_chocolatinho.mp3';
+import ganhouChuparDedoAudio from '../../data/audio/chupar_dedo.ogg';
 
 const acertos_para_ganhar = 3;
 const noPrizeOption = "Chupar o Dedo";
 const recompensaPorNivel = Array(acertos_para_ganhar - 3 + 2).fill(noPrizeOption).concat(["Chocolatinho", "Chocolate", "Chocolatão"]);
-const tempo_para_responder_pergunta = 3;
+const tempo_para_responder_pergunta = 30;
 const tempo_para_pesquisar = 40;
 
 
@@ -187,6 +191,83 @@ const Game = ({ setGameStarted }) => {
     };
   }, [counterInicio]);
 
+  //// ganhou chocolatao
+  const ganhouChocolataoAudioRef = useRef(null);
+  // ganhou chocolatao
+  useEffect(() => {
+    ganhouChocolataoAudioRef.current = new Audio(ganhouChocolataoAudio);
+    ganhouChocolataoAudioRef.current.loop = false;
+    ganhouChocolataoAudioRef.current.volume = 1.0;
+    return () => {
+      if (ganhouChocolataoAudioRef.current) {
+        ganhouChocolataoAudioRef.current.pause();
+        ganhouChocolataoAudioRef.current.currentTime = 0;
+      }
+    };
+  }, [counterInicio]);
+
+  //// ganhou chocolate
+  const ganhouChocolateAudioRef = useRef(null);
+  // ganhou chocolate
+  useEffect(() => {
+    ganhouChocolateAudioRef.current = new Audio(ganhouChocolateAudio);
+    ganhouChocolateAudioRef.current.loop = false;
+    ganhouChocolateAudioRef.current.volume = 1.0;
+    return () => {
+      if (ganhouChocolateAudioRef.current) {
+        ganhouChocolateAudioRef.current.pause();
+        ganhouChocolateAudioRef.current.currentTime = 0;
+      }
+    };
+  }, [counterInicio]);
+
+  //// ganhou chocolatinho
+  const ganhouChocolatinhoAudioRef = useRef(null);
+  // ganhou chocolatinho
+  useEffect(() => {
+    ganhouChocolatinhoAudioRef.current = new Audio(ganhouChocolatinhoAudio);
+    ganhouChocolatinhoAudioRef.current.loop = false;
+    ganhouChocolatinhoAudioRef.current.volume = 1.0;
+    return () => {
+      if (ganhouChocolatinhoAudioRef.current) {
+        ganhouChocolatinhoAudioRef.current.pause();
+        ganhouChocolatinhoAudioRef.current.currentTime = 0;
+      }
+    };
+  }, [counterInicio]);
+
+  //// ganhou chupar dedo
+  const ganhouChuparDedoAudioRef = useRef(null);
+  // ganhou chupar dedo
+  useEffect(() => {
+    ganhouChuparDedoAudioRef.current = new Audio(ganhouChuparDedoAudio);
+    ganhouChuparDedoAudioRef.current.loop = false;
+    ganhouChuparDedoAudioRef.current.volume = 1.0;
+    return () => {
+      if (ganhouChuparDedoAudioRef.current) {
+        ganhouChuparDedoAudioRef.current.pause();
+        ganhouChuparDedoAudioRef.current.currentTime = 0;
+      }
+    };
+  }, [counterInicio]);
+
+  const playPrizeAudio = () => {
+    switch (recompensaPorNivel[currentNivel + 1]) {
+      case recompensaPorNivel[recompensaPorNivel.length - 1]:
+        ganhouChocolataoAudioRef.current.play();
+        break;
+      case recompensaPorNivel[recompensaPorNivel.length - 2]:
+        ganhouChocolateAudioRef.current.play();
+        break;
+      case recompensaPorNivel[recompensaPorNivel.length - 3]:
+        ganhouChocolatinhoAudioRef.current.play();
+        break;
+      default:
+        ganhouChuparDedoAudioRef.current.play();
+        break;
+    }
+  };
+
   //// stop sounds
   const stopSounds = () => {
     if (certaRespostaAudioRef.current) {
@@ -204,6 +285,22 @@ const Game = ({ setGameStarted }) => {
     if (ticTocAudioRef.current) {
       ticTocAudioRef.current.pause();
       ticTocAudioRef.current.currentTime = 0;
+    }
+    if (ganhouChocolataoAudioRef.current) {
+      ganhouChocolataoAudioRef.current.pause();
+      ganhouChocolataoAudioRef.current.currentTime = 0;
+    }
+    if (ganhouChocolateAudioRef.current) {
+      ganhouChocolateAudioRef.current.pause();
+      ganhouChocolateAudioRef.current.currentTime = 0;
+    }
+    if (ganhouChocolatinhoAudioRef.current) {
+      ganhouChocolatinhoAudioRef.current.pause();
+      ganhouChocolatinhoAudioRef.current.currentTime = 0;
+    }
+    if (ganhouChuparDedoAudioRef.current) {
+      ganhouChuparDedoAudioRef.current.pause();
+      ganhouChuparDedoAudioRef.current.currentTime = 0;
     }
   };
 
@@ -223,6 +320,7 @@ const Game = ({ setGameStarted }) => {
 
   // Passa de nivel
   const passaNivel = () => {
+    stopSounds();
     if (currentNivel === acertos_para_ganhar) {
       setShowModal(true);
       setGameWon(true);
@@ -415,7 +513,7 @@ const Game = ({ setGameStarted }) => {
             `A resposta está ERRADA. A opção certa era ${
               currentPergunta.alternativas[parseInt(currentPergunta.resposta) - 1]
             }.\nVoce ganhou: ${noPrizeOption}`}
-          {gameWon && (
+          {gameWon && ganhouChocolataoAudioRef.current.play() && (
             <Fragment>
               Parabéns!!! Você ganhou {recompensaPorNivel[currentNivel + 1]}!
             </Fragment>
