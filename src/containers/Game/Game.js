@@ -55,7 +55,7 @@ const Game = ({ setGameStarted }) => {
   const [cartaEnabled, setCartaEnabled] = useState(false);
   const [cardsToDisplay, setCardsToDisplay] = useState(new Set([0, 1, 2, 3]));
 
-  const [ajudaDisponiveis, setAjudaDisponiveis] = useState(1);
+  const [ajudaPlateiaDisponiveis, setAjudaPlateiaDisponiveis] = useState(1);
 
   // Divide perguntas em faceis, medias e dificeis
   const dividePerguntas = () => {
@@ -194,9 +194,9 @@ const Game = ({ setGameStarted }) => {
     setCardsToDisplay(cardsToDisplay);
   };
 
-  const usarAjuda = () => {
-    window.confirm(`Peça ajuda. Depois que se decidir, clique em "Continuar".`)
-    setAjudaDisponiveis((a) => a - 1);
+  const usarAjudaPlateia = () => {
+    window.confirm(`Peça ajuda. Depois que se decidir, clique em "Ok".`)
+    setAjudaPlateiaDisponiveis((a) => a - 1);
   };
 
   const cartasResumeGame = () => {
@@ -342,9 +342,9 @@ const Game = ({ setGameStarted }) => {
                             CARTAS ({cartasDisponiveis})
                           </div>
                         )}
-                        {currentNivel < acertos_para_ganhar && ajudaDisponiveis > 0 && (
-                          <div className='opcao' onClick={usarAjuda}>
-                            AJUDA ({ajudaDisponiveis})
+                        {currentNivel < acertos_para_ganhar && ajudaPlateiaDisponiveis > 0 && (
+                          <div className='opcao' onClick={usarAjudaPlateia}>
+                            PLATEIA ({ajudaPlateiaDisponiveis})
                           </div>
                         )}
                       </div>
