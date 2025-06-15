@@ -49,11 +49,13 @@ const Game = ({ setGameStarted }) => {
   const [respostaCerta, setRespostaCerta] = useState(false);
 
   const [pularDisponiveis, setPularDisponiveis] = useState(3);
-
+  
   const [cartasDisponiveis, setCartasDisponiveis] = useState(1);
   const [cartaValue, setCartaValue] = useState(null);
   const [cartaEnabled, setCartaEnabled] = useState(false);
   const [cardsToDisplay, setCardsToDisplay] = useState(new Set([0, 1, 2, 3]));
+
+  const [ajudaDisponiveis, setAjudaDisponiveis] = useState(1);
 
   // Divide perguntas em faceis, medias e dificeis
   const dividePerguntas = () => {
@@ -192,6 +194,11 @@ const Game = ({ setGameStarted }) => {
     setCardsToDisplay(cardsToDisplay);
   };
 
+  const usarAjuda = () => {
+    window.confirm(`Peça ajuda. Depois que se decidir, clique em "Continuar".`)
+    setAjudaDisponiveis((a) => a - 1);
+  };
+
   const cartasResumeGame = () => {
     setShowCardsPrompt(false);
     iniciaTimerPergunta();
@@ -327,6 +334,16 @@ const Game = ({ setGameStarted }) => {
                         {currentNivel < acertos_para_ganhar && cartasDisponiveis > 0 && (
                           <div className='opcao' onClick={usarCartas}>
                             CARTAS ({cartasDisponiveis})
+                          </div>
+                        )}
+                        {currentNivel < acertos_para_ganhar && ajudaDisponiveis > 0 && (
+                          <div className='opcao' onClick={usarAjuda}>
+                            AJUDA ({ajudaDisponiveis})
+                          </div>
+                        )}
+                        {(
+                          <div className='opcao' onClick={() => {window.alert(`Jogo pausado. Clique para continuar.`)}}>
+                            PAUSA
                           </div>
                         )}
                       </div>
