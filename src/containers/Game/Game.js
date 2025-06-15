@@ -16,6 +16,7 @@ import UnclosableModal from '../../components/UnclosableModal';
 import certaRespostaAudio from '../../data/audio/certa_resposta.mp3';
 import erradaRespostaAudio from '../../data/audio/errada_resposta.mp3';
 import tempoAcabouAudio from '../../data/audio/tempo_acabou.mp3';
+import ticTocAudio from '../../data/audio/tic_toc.mp3';
 
 const acertos_para_ganhar = 3;
 const noPrizeOption = "Chupar o Dedo";
@@ -171,6 +172,41 @@ const Game = ({ setGameStarted }) => {
     };
   }, [counterInicio]);
 
+  //// tic toc
+  const ticTocAudioRef = useRef(null);
+  // tic toc
+  useEffect(() => {
+    ticTocAudioRef.current = new Audio(ticTocAudio);
+    ticTocAudioRef.current.loop = true;
+    ticTocAudioRef.current.volume = 1.0;
+    return () => {
+      if (ticTocAudioRef.current) {
+        ticTocAudioRef.current.pause();
+        ticTocAudioRef.current.currentTime = 0;
+      }
+    };
+  }, [counterInicio]);
+
+  //// stop sounds
+  const stopSounds = () => {
+    if (certaRespostaAudioRef.current) {
+      certaRespostaAudioRef.current.pause();
+      certaRespostaAudioRef.current.currentTime = 0;
+    }
+    if (erradaRespostaAudioRef.current) {
+      erradaRespostaAudioRef.current.pause();
+      erradaRespostaAudioRef.current.currentTime = 0;
+    }
+    if (tempoAcabouAudioRef.current) {
+      tempoAcabouAudioRef.current.pause();
+      tempoAcabouAudioRef.current.currentTime = 0;
+    }
+    if (ticTocAudioRef.current) {
+      ticTocAudioRef.current.pause();
+      ticTocAudioRef.current.currentTime = 0;
+    }
+  };
+
   // Para os timers se chegarem a zero
   useEffect(() => {
     if (counterInicio === 0) {
@@ -202,6 +238,7 @@ const Game = ({ setGameStarted }) => {
   // Responde pergunta
   const responderPergunta = (resposta) => {
     clearInterval(timerPergunta);
+    stopSounds();
     if (currentPergunta.resposta === resposta.toString()) {
       // certa resposta song
       certaRespostaAudioRef.current.play();
@@ -225,6 +262,7 @@ const Game = ({ setGameStarted }) => {
 
   // Pula a pergunta
   const pularPergunta = () => {
+    stopSounds();
     setPularDisponiveis((p) => p - 1);
     clearInterval(timerPergunta);
     setShowNextQuestionPrompt(true);
@@ -234,6 +272,7 @@ const Game = ({ setGameStarted }) => {
 
   // Continue game when prompt is dismissed
   const continueGame = () => {
+    stopSounds();
     setShowNextQuestionPrompt(false);
     setCurrentNivel((c) => c + 1);
     getPerguntaAleatoria(currentNivel + 1);
@@ -242,6 +281,7 @@ const Game = ({ setGameStarted }) => {
   };
 
   const usarCartas = () => {
+    stopSounds();
     setCartasDisponiveis((c) => c - 1);
     clearInterval(timerPergunta);
     setShowCardsPrompt(true);
@@ -258,16 +298,19 @@ const Game = ({ setGameStarted }) => {
   };
 
   const usarAjudaPlateia = () => {
+    stopSounds();
     window.confirm(`Peça ajuda. Depois que se decidir, clique em "Ok".`)
     setAjudaPlateiaDisponiveis((a) => a - 1);
   };
 
   const cartasResumeGame = () => {
+    stopSounds();
     setShowCardsPrompt(false);
     iniciaTimerPergunta();
   };
 
   const perguntaJaRespondida = () => {
+    stopSounds();
     const password = "sim";
     const input_password = window.prompt(`Essa pergunta realmente já foi respondida? (digite "${password}" para confirmar)`);
     if (input_password === password) {
@@ -279,8 +322,10 @@ const Game = ({ setGameStarted }) => {
   }
 
   const iniciaTimerPesquisas = () => {
+    stopSounds();
     clearInterval(timerPesquisas);
     setCounterPesquisas(tempo_para_pesquisar);
+    ticTocAudioRef.current.play();
     setTimerPesquisas(
       setInterval(() => {
         setCounterPesquisas((c) => c - 1);
@@ -289,6 +334,7 @@ const Game = ({ setGameStarted }) => {
   };
 
   const usarPesquisa = () => {
+    stopSounds();
     setPesquisaDisponiveis((p) => p - 1);
     clearInterval(timerPergunta);
     setShowPesquisasPrompt(true);
@@ -296,6 +342,7 @@ const Game = ({ setGameStarted }) => {
   };
 
   const pesquisasResumeGame = () => {
+    stopSounds();
     setShowPesquisasPrompt(false);
     iniciaTimerPergunta();
   };
