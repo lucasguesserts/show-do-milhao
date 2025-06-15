@@ -14,6 +14,7 @@ import logo from './logo.png';
 import UnclosableModal from '../../components/UnclosableModal';
 
 import certaRespostaAudio from '../../data/audio/certa_resposta.mp3';
+import erradaRespostaAudio from '../../data/audio/errada_resposta.mp3';
 
 const acertos_para_ganhar = 3;
 const noPrizeOption = "Chupar o Dedo";
@@ -123,6 +124,8 @@ const Game = ({ setGameStarted }) => {
 
 
   // songs
+
+  //// certa resposta
   const certaRespostaAudioRef = useRef(null);
   // certa resposta
   useEffect(() => {
@@ -132,6 +135,22 @@ const Game = ({ setGameStarted }) => {
     const play = async () => {
       try {
         await certaRespostaAudio.current.play();
+      } catch (err) {
+        console.error('Failed to play audio:', err);
+      }
+    };
+  }, [counterInicio]);
+
+  //// errada resposta
+  const erradaRespostaAudioRef = useRef(null);
+  // errada resposta
+  useEffect(() => {
+    erradaRespostaAudioRef.current = new Audio(erradaRespostaAudio);
+    erradaRespostaAudioRef.current.loop = false;
+    erradaRespostaAudioRef.current.volume = 1.0;
+    const play = async () => {
+      try {
+        await erradaRespostaAudio.current.play();
       } catch (err) {
         console.error('Failed to play audio:', err);
       }
@@ -184,6 +203,8 @@ const Game = ({ setGameStarted }) => {
         passaNivel();
       }, 1500);
     } else {
+      // errada resposta song
+      erradaRespostaAudioRef.current.play();
       setGameOver(true);
       setShowModal(true);
     }
