@@ -204,6 +204,17 @@ const Game = ({ setGameStarted }) => {
     iniciaTimerPergunta();
   };
 
+  const perguntaJaRespondida = () => {
+    const password = "sim";
+    const input_password = window.prompt(`Essa pergunta realmente já foi respondida? (digite "${password}" para confirmar)`);
+    if (input_password === password) {
+      clearInterval(timerPergunta);
+      setShowNextQuestionPrompt(true);
+      setCurrentNivel((c) => c - 1);
+      setCartaEnabled(false);
+    }
+  }
+
   // Render
   return (
     <section className='game background'>
@@ -255,22 +266,17 @@ const Game = ({ setGameStarted }) => {
           {counterPergunta === 0 &&
             `Sinto muito, o seu tempo acabou. A opção certa era ${
               currentPergunta.alternativas[parseInt(currentPergunta.resposta) - 1]
-            }.`}
+            }.\nVoce ganhou: ${noPrizeOption}`}
           {gameOver &&
             `A resposta está ERRADA. A opção certa era ${
               currentPergunta.alternativas[parseInt(currentPergunta.resposta) - 1]
-            }.`}
+            }.\nVoce ganhou: ${noPrizeOption}`}
           {gameWon && (
             <Fragment>
               Parabéns!!! Você ganhou {recompensaPorNivel[currentNivel + 1]}!
             </Fragment>
           )}
         </p>
-        {(counterPergunta === 0 || gameOver) && (
-          <p>
-            Você ganhou {recompensaPorNivel[currentNivel + 1]}!
-          </p>
-        )}
 
         <div className='text-center mt-5'>
           <Button
@@ -341,9 +347,20 @@ const Game = ({ setGameStarted }) => {
                             AJUDA ({ajudaDisponiveis})
                           </div>
                         )}
+                      </div>
+                    </Col>
+                  </Row>
+                  <Row className='mt-4'>
+                    <Col xs='auto' className='mx-auto'>
+                      <div className='text-center opcoes'>
                         {(
                           <div className='opcao' onClick={() => {window.alert(`Jogo pausado. Clique para continuar.`)}}>
                             PAUSA
+                          </div>
+                        )}
+                        {(
+                          <div className='opcao' onClick={() => {perguntaJaRespondida()}}>
+                            PERGUNTA JA RESPONDIDA
                           </div>
                         )}
                       </div>
