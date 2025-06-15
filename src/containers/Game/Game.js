@@ -15,11 +15,12 @@ import UnclosableModal from '../../components/UnclosableModal';
 
 import certaRespostaAudio from '../../data/audio/certa_resposta.mp3';
 import erradaRespostaAudio from '../../data/audio/errada_resposta.mp3';
+import tempoAcabouAudio from '../../data/audio/tempo_acabou.mp3';
 
 const acertos_para_ganhar = 3;
 const noPrizeOption = "Chupar o Dedo";
 const recompensaPorNivel = Array(acertos_para_ganhar - 3 + 2).fill(noPrizeOption).concat(["Chocolatinho", "Chocolate", "Chocolatão"]);
-const tempo_para_responder_pergunta = 300000;
+const tempo_para_responder_pergunta = 3;
 const tempo_para_pesquisar = 40;
 
 
@@ -132,11 +133,10 @@ const Game = ({ setGameStarted }) => {
     certaRespostaAudioRef.current = new Audio(certaRespostaAudio);
     certaRespostaAudioRef.current.loop = false;
     certaRespostaAudioRef.current.volume = 1.0;
-    const play = async () => {
-      try {
-        await certaRespostaAudio.current.play();
-      } catch (err) {
-        console.error('Failed to play audio:', err);
+    return () => {
+      if (certaRespostaAudioRef.current) {
+        certaRespostaAudioRef.current.pause();
+        certaRespostaAudioRef.current.currentTime = 0;
       }
     };
   }, [counterInicio]);
@@ -148,15 +148,28 @@ const Game = ({ setGameStarted }) => {
     erradaRespostaAudioRef.current = new Audio(erradaRespostaAudio);
     erradaRespostaAudioRef.current.loop = false;
     erradaRespostaAudioRef.current.volume = 1.0;
-    const play = async () => {
-      try {
-        await erradaRespostaAudio.current.play();
-      } catch (err) {
-        console.error('Failed to play audio:', err);
+    return () => {
+      if (erradaRespostaAudioRef.current) {
+        erradaRespostaAudioRef.current.pause();
+        erradaRespostaAudioRef.current.currentTime = 0;
       }
     };
   }, [counterInicio]);
 
+  //// tempo acabou
+  const tempoAcabouAudioRef = useRef(null);
+  // tempo acabou
+  useEffect(() => {
+    tempoAcabouAudioRef.current = new Audio(tempoAcabouAudio);
+    tempoAcabouAudioRef.current.loop = false;
+    tempoAcabouAudioRef.current.volume = 1.0;
+    return () => {
+      if (tempoAcabouAudioRef.current) {
+        tempoAcabouAudioRef.current.pause();
+        tempoAcabouAudioRef.current.currentTime = 0;
+      }
+    };
+  }, [counterInicio]);
 
   // Para os timers se chegarem a zero
   useEffect(() => {
@@ -347,7 +360,7 @@ const Game = ({ setGameStarted }) => {
         show={showModal}
         setShow={setShowModal}>
         <p>
-          {counterPergunta === 0 &&
+          {counterPergunta === 0 && tempoAcabouAudioRef.current.play() &&
             `Sinto muito, o seu tempo acabou. A opção certa era ${
               currentPergunta.alternativas[parseInt(currentPergunta.resposta) - 1]
             }.\nVoce ganhou: ${noPrizeOption}`}
