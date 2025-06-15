@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Fragment } from 'react';
+import React, { useState, useEffect, Fragment, useRef } from 'react';
 
 import classnames from 'classnames';
 import confetti from 'canvas-confetti';
@@ -12,6 +12,8 @@ import { bancoPerguntas } from '../../data/perguntas';
 import './Game.css';
 import logo from './logo.png';
 import UnclosableModal from '../../components/UnclosableModal';
+
+import certaRespostaAudio from '../../data/audio/certa_resposta.mp3';
 
 const acertos_para_ganhar = 3;
 const noPrizeOption = "Chupar o Dedo";
@@ -118,6 +120,25 @@ const Game = ({ setGameStarted }) => {
     setCartaEnabled(false);
   }, []);
 
+
+
+  // songs
+  const certaRespostaAudioRef = useRef(null);
+  // certa resposta
+  useEffect(() => {
+    certaRespostaAudioRef.current = new Audio(certaRespostaAudio);
+    certaRespostaAudioRef.current.loop = false;
+    certaRespostaAudioRef.current.volume = 1.0;
+    const play = async () => {
+      try {
+        await certaRespostaAudio.current.play();
+      } catch (err) {
+        console.error('Failed to play audio:', err);
+      }
+    };
+  }, [counterInicio]);
+
+
   // Para os timers se chegarem a zero
   useEffect(() => {
     if (counterInicio === 0) {
@@ -150,6 +171,8 @@ const Game = ({ setGameStarted }) => {
   const responderPergunta = (resposta) => {
     clearInterval(timerPergunta);
     if (currentPergunta.resposta === resposta.toString()) {
+      // certa resposta song
+      certaRespostaAudioRef.current.play();
       // pisca resposta certa
       const highlightInterval = setInterval(() => {
         setRespostaCerta((r) => !r);
