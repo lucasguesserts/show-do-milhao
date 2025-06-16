@@ -25,6 +25,7 @@ import ganhouChuparDedoAudio from '../../data/audio/chupar_dedo.ogg';
 const noPrizeOption = "Chupar o Dedo";
 const tempo_para_responder_pergunta = 30;
 const tempo_para_pesquisar = 40;
+const tempo_para_plateia = 90;
 const perguntas_faceis_a_fazer = 4;
 const perguntas_medias_a_fazer = 6;
 const perguntas_dificeis_a_fazer = 2;
@@ -65,6 +66,9 @@ const Game = ({ setGameStarted }) => {
   const [cardsToDisplay, setCardsToDisplay] = useState(new Set([0, 1, 2, 3]));
 
   const [ajudaPlateiaDisponiveis, setAjudaPlateiaDisponiveis] = useState(1);
+  const [showPlateiaPrompt, setShowPlateiaPrompt] = useState(false);
+  const [timerPlateia, setTimerPlateia] = useState(null);
+  const [counterPlateia, setCounterPlateia] = useState(1);
 
   const [pesquisaDisponiveis, setPesquisaDisponiveis] = useState(1);
   const [showPesquisasPrompt, setShowPesquisasPrompt] = useState(false);
@@ -396,12 +400,6 @@ const Game = ({ setGameStarted }) => {
     setCardsToDisplay(cardsToDisplay);
   };
 
-  const usarAjudaPlateia = () => {
-    stopSounds();
-    window.confirm(`Peça ajuda. Depois que se decidir, clique em "Ok".`)
-    setAjudaPlateiaDisponiveis((a) => a - 1);
-  };
-
   const cartasResumeGame = () => {
     stopSounds();
     setShowCardsPrompt(false);
@@ -452,6 +450,38 @@ const Game = ({ setGameStarted }) => {
     tempoAcabouAudioRef.current.play();
   };
 
+  const usarAjudaPlateia = () => {
+    stopSounds();
+    setAjudaPlateiaDisponiveis((a) => a - 1);
+    clearInterval(timerPergunta);
+    setShowPlateiaPrompt(true);
+    setCounterPlateia(tempo_para_plateia);
+  };
+
+  const iniciaTimerPlateia = () => {
+    stopSounds();
+    clearInterval(timerPlateia);
+    setCounterPlateia(tempo_para_plateia);
+    ticTocAudioRef.current.play();
+    setTimerPlateia(
+      setInterval(() => {
+        setCounterPlateia((c) => c - 1);
+      }, 1000)
+    );
+  };
+
+  const plateiaResumeGame = () => {
+    stopSounds();
+    setShowPlateiaPrompt(false);
+    iniciaTimerPergunta();
+  };
+
+  const timerPlateiaFinished = () => {
+    clearInterval(timerPlateia);
+    ticTocAudioRef.current.pause();
+    tempoAcabouAudioRef.current.play();
+  };
+
   // Render
   return (
     <section className='game background'>
@@ -497,6 +527,19 @@ const Game = ({ setGameStarted }) => {
             <p><Button className="btn btn-primary" onClick={iniciaTimerPesquisas}>Iniciar</Button></p>
             <p><Button className="btn btn-primary" onClick={pesquisasResumeGame}>Responder</Button></p>
             {counterPesquisas === 0 && timerPesquisasFinished()}
+          </div>
+        </div>
+      )}
+      {showPlateiaPrompt && (
+        <div className="prompt-modal">
+          <div className="prompt-content">
+            <h3>Peça ajuda para a plateia!</h3>
+            <p>A pergunta é:</p>
+            <blockquote>{currentPergunta.pergunta}</blockquote>
+            <p>Tempo disponível para ajuda da plateia: {counterPlateia}</p>
+            <p><Button className="btn btn-primary" onClick={iniciaTimerPlateia}>Iniciar</Button></p>
+            <p><Button className="btn btn-primary" onClick={plateiaResumeGame}>Responder</Button></p>
+            {counterPlateia === 0 && timerPlateiaFinished()}
           </div>
         </div>
       )}
