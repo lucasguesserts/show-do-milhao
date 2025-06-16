@@ -51,6 +51,8 @@ const Game = ({ setGameStarted }) => {
   const [currentNivel, setCurrentNivel] = useState(0);
   const [counterInicio, setCounterInicio] = useState(1); // this guarantees that the questions are loaded before continueGame() is called
 
+  const [showPararPrompt, setShowPararPrompt] = useState(false);
+
   const [timerPergunta, setTimerPergunta] = useState(null);
   const [counterPergunta, setCounterPergunta] = useState(1);
 
@@ -143,11 +145,6 @@ const Game = ({ setGameStarted }) => {
       }, 1000)
     );
   };
-
-  const pararJogo = () => {
-    if (window.confirm(`Tem certeza de que deseja parar? Você ganhará ${recompensaPorNivel[currentNivel+1]}`))
-      setGameStarted(false);
-    }
 
   // Inicia o jogo
   useEffect(() => {
@@ -356,8 +353,8 @@ const Game = ({ setGameStarted }) => {
     };
   }, [counterInicio]);
 
-  const playPrizeAudio = () => {
-    switch (recompensaPorNivel[currentNivel + 1]) {
+  const playPrizeAudio = (recompensa) => {
+    switch (recompensa) {
       case recompensaPorNivel[recompensaPorNivel.length - 1]:
         ganhouChocolataoAudioRef.current.play();
         break;
@@ -546,6 +543,24 @@ const Game = ({ setGameStarted }) => {
     iniciaTimerPergunta();
   };
 
+  const usarPararJogo = () => {
+    stopSounds();
+    playPrizeAudio(recompensaPorNivel[currentNivel]);
+    clearInterval(timerPergunta);
+    setShowPararPrompt(true);
+  };
+
+  const pararJogo = () => {
+    stopSounds();
+    setGameStarted(false);
+  };
+
+  const pararJogoResumeGame = () => {
+    stopSounds();
+    setShowPararPrompt(false);
+    iniciaTimerPergunta();
+  };
+
   const perguntaJaRespondida = () => {
     stopSounds();
     const password = "sim";
@@ -684,6 +699,17 @@ const Game = ({ setGameStarted }) => {
           </div>
         </div>
       )}
+      {showPararPrompt && (
+        <div className="prompt-modal">
+          <div className="prompt-content">
+            <h3>Deseja realmente parar?</h3>
+            <p>A pergunta é:</p>
+            <blockquote>{currentPergunta.pergunta}</blockquote>
+            <p><Button className="btn btn-primary" onClick={pararJogo}>SIM, PARAR JOGO</Button></p>
+            <p><Button className="btn btn-primary" onClick={pararJogoResumeGame}>NÃO, CONTINUAR</Button></p>
+          </div>
+        </div>
+      )}
       <UnclosableModal
         title={
           counterPergunta === 0
@@ -818,7 +844,7 @@ const Game = ({ setGameStarted }) => {
                         <div className='valor'>{recompensaPorNivel[currentNivel]}</div>
                         <p
                           className='opcao'
-                          onClick={pararJogo}>PARAR</p>
+                          onClick={usarPararJogo}>PARAR</p>
                       </div>
                       <div className='text-center projecoes'>
                         <div className='valor'>{recompensaPorNivel[currentNivel + 1]}</div>
