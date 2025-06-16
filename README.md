@@ -34,3 +34,14 @@ The game page, where the states and controls are and the game view is generated.
 ## License
 
 [MIT](https://choosealicense.com/licenses/mit/)
+
+## Similar
+
+- https://github.com/MatheusPrudente/Jogo-do-Milhao/tree/main
+- https://gist.github.com/camargogu1/710728caee57f41a417f8e45b70b0b38
+- https://github.com/felcg/show_do_milhao/
+- https://github.com/geeksilva97/app-show-do-milhao
+- https://github.com/Montfel/Show-do-Milhao
+- https://github.com/Computacao-Movel-PROJETOS/Jogo_do_Milhao
+- https://github.com/Marceloknust/showdomilhao/
+

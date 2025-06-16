@@ -845,7 +845,7 @@ export const bancoPerguntas = [
   },
   {
     pergunta: 'Qual é o nome verdadeiro do Batman?',
-    alternativas: ['BRUCE WAYNE', 'DEXTER', 'CLARK KENT', 'LEX LUTOR'],
+    alternativas: ['BRUCE WAYNE', 'DEXTER', 'CLARK KENT', 'LEX LUTHOR'],
     dificuldade: 'Média',
     resposta: '1',
   },
