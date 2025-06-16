@@ -75,35 +75,54 @@ const Game = ({ setGameStarted }) => {
   const [timerPesquisas, setTimerPesquisas] = useState(null);
   const [counterPesquisas, setCounterPesquisas] = useState(1);
 
-  let perguntasFaceis = bancoPerguntas.filter((p) => p.dificuldade === 'Fácil');
-  let perguntasMedias = bancoPerguntas.filter((p) => p.dificuldade === 'Média');
-  let perguntasDificeis = bancoPerguntas.filter((p) => p.dificuldade === 'Difícil');
+  const [perguntasFaceis, setPerguntasFaceis] = useState(bancoPerguntas.filter((p) => p.dificuldade === 'Fácil'));
+  const [perguntasFaceisRestantes, setPerguntasFaceisRestantes] = useState(perguntas_faceis_a_fazer);
+  const [perguntasMedias, setPerguntasMedias] = useState(bancoPerguntas.filter((p) => p.dificuldade === 'Média'));
+  const [perguntasMediasRestantes, setPerguntasMediasRestantes] = useState(perguntas_medias_a_fazer);
+  const [perguntasDificeis, setPerguntasDificeis] = useState(bancoPerguntas.filter((p) => p.dificuldade === 'Difícil'));
+  const [perguntasDificeisRestantes, setPerguntasDificeisRestantes] = useState(perguntas_dificeis_a_fazer);
+
 
   // Seleciona pergunta aleatoria
   const getPerguntaAleatoria = (currentNivel) => {
-    let perguntasArr, pergunta, randomIndex;
-    console.log(currentNivel);
-    console.log(perguntasFaceis.length);
-    console.log(perguntasMedias.length);
-    console.log(perguntasDificeis.length);
+    if (perguntasFaceis.length < perguntasFaceisRestantes) {
+      throw new Error(`O número de perguntas fáceis disponíveis (${perguntasFaceis.length}) é menor que o número de perguntas fáceis a fazer (${perguntas_faceis_a_fazer}).`);
+    }
+    if (perguntasMedias.length < perguntasMediasRestantes) {
+      throw new Error(`O número de perguntas médias disponíveis (${perguntasMedias.length}) é menor que o número de perguntas médias a fazer (${perguntas_medias_a_fazer}).`);
+    }
+    if (perguntasDificeis.length < perguntasDificeisRestantes) {
+      throw new Error(`O número de perguntas difíceis disponíveis (${perguntasDificeis.length}) é menor que o número de perguntas difíceis a fazer (${perguntas_dificeis_a_fazer}).`);
+    }
+    console.log(`perguntas faceis disponiveis: ${perguntasFaceis.length}`)
+    console.log(`perguntas medias disponiveis: ${perguntasMedias.length}`)
+    console.log(`perguntas dificeis disponiveis: ${perguntasDificeis.length}`)
+    console.log(`perguntas faceis restantes: ${perguntasFaceisRestantes}`)
+    console.log(`perguntas medias restantes: ${perguntasMediasRestantes}`)
+    console.log(`perguntas dificeis restantes: ${perguntasDificeisRestantes}`)
+    console.log("========")
+    let pergunta, randomIndex;
     if (currentNivel <= perguntas_faceis_a_fazer) {
-      console.log("faceis");
-      perguntasArr = [...perguntasFaceis];
-      randomIndex = Math.floor(Math.random() * perguntasArr.length);
-      pergunta = perguntasArr.splice(randomIndex, 1)[0];
-      perguntasFaceis = perguntasArr;
+      randomIndex = Math.floor(Math.random() * perguntasFaceis.length);
+      pergunta = perguntasFaceis[randomIndex];
+      const newPerguntasFaceis = [...perguntasFaceis];
+      newPerguntasFaceis.splice(randomIndex, 1);
+      setPerguntasFaceis(newPerguntasFaceis);
+      setPerguntasFaceisRestantes(perguntasFaceisRestantes - 1);
     } else if (currentNivel <= perguntas_faceis_a_fazer + perguntas_medias_a_fazer) {
-      console.log("medias");
-      perguntasArr = [...perguntasMedias];
-      randomIndex = Math.floor(Math.random() * perguntasArr.length);
-      pergunta = perguntasArr.splice(randomIndex, 1)[0];
-      perguntasMedias = perguntasArr;
+      randomIndex = Math.floor(Math.random() * perguntasMedias.length);
+      pergunta = perguntasMedias[randomIndex];
+      const newPerguntasMedias = [...perguntasMedias];
+      newPerguntasMedias.splice(randomIndex, 1);
+      setPerguntasMedias(newPerguntasMedias);
+      setPerguntasMediasRestantes(perguntasMediasRestantes - 1);
     } else if (currentNivel <= perguntas_faceis_a_fazer + perguntas_medias_a_fazer + perguntas_dificeis_a_fazer) {
-      console.log("dificeis");
-      perguntasArr = [...perguntasDificeis];
-      randomIndex = Math.floor(Math.random() * perguntasArr.length);
-      pergunta = perguntasArr.splice(randomIndex, 1)[0];
-      perguntasDificeis = perguntasArr;
+      randomIndex = Math.floor(Math.random() * perguntasDificeis.length);
+      pergunta = perguntasDificeis[randomIndex];
+      const newPerguntasDificeis = [...perguntasDificeis];
+      newPerguntasDificeis.splice(randomIndex, 1);
+      setPerguntasDificeis(newPerguntasDificeis);
+      setPerguntasDificeisRestantes(perguntasDificeisRestantes - 1);
     }
     setCurrentPergunta(pergunta);
   };
