@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import homeAudio from '../../data/audio/home.ogg';
+import homeAudio from '../../data/audio/home.mp3';
 import './Home.css';
 
 const Home = (props) => {
