@@ -22,11 +22,14 @@ import ganhouChocolateAudio from '../../data/audio/ganhou_chocolate.mp3';
 import ganhouChocolatinhoAudio from '../../data/audio/ganhou_chocolatinho.mp3';
 import ganhouChuparDedoAudio from '../../data/audio/chupar_dedo.ogg';
 
-const acertos_para_ganhar = 3;
 const noPrizeOption = "Chupar o Dedo";
-const recompensaPorNivel = Array(acertos_para_ganhar - 3 + 2).fill(noPrizeOption).concat(["Chocolatinho", "Chocolate", "Chocolatão"]);
 const tempo_para_responder_pergunta = 30;
 const tempo_para_pesquisar = 40;
+const perguntas_faceis = 4;
+const perguntas_medias = 6;
+const perguntas_dificeis = 2;
+const acertos_para_ganhar = perguntas_faceis + perguntas_medias + perguntas_dificeis;
+const recompensaPorNivel = Array(acertos_para_ganhar - 3 + 2).fill(noPrizeOption).concat(["Chocolatinho", "Chocolate", "Chocolatão"]);
 
 
 if (acertos_para_ganhar < 3) {
@@ -75,25 +78,25 @@ const Game = ({ setGameStarted }) => {
   // Divide perguntas em faceis, medias e dificeis
   const dividePerguntas = () => {
     const perguntas = [...bancoPerguntas];
-    setPerguntasFaceis(perguntas.splice(0, 8));
-    setPerguntasMedias(perguntas.splice(0, 100));
-    setPerguntasDificeis(perguntas.splice(0, 100));
+    setPerguntasFaceis(perguntas.filter((p) => p.dificuldade === 'Fácil'));
+    setPerguntasMedias(perguntas.filter((p) => p.dificuldade === 'Média'));
+    setPerguntasDificeis(perguntas.filter((p) => p.dificuldade === 'Difícil'));
   };
 
   // Seleciona pergunta aleatoria
   const getPerguntaAleatoria = (currentNivel) => {
     let perguntasArr, pergunta, randomIndex;
-    if (currentNivel < 6) {
+    if (currentNivel <= perguntas_faceis) {
       perguntasArr = [...perguntasFaceis];
       randomIndex = Math.floor(Math.random() * perguntasArr.length);
       pergunta = perguntasArr.splice(randomIndex, 1)[0];
       setPerguntasFaceis(perguntasArr);
-    } else if (currentNivel < 11) {
+    } else if (currentNivel <= perguntas_medias) {
       perguntasArr = [...perguntasMedias];
       randomIndex = Math.floor(Math.random() * perguntasArr.length);
       pergunta = perguntasArr.splice(randomIndex, 1)[0];
       setPerguntasMedias(perguntasArr);
-    } else if (currentNivel < 16) {
+    } else if (currentNivel <= perguntas_dificeis) {
       perguntasArr = [...perguntasDificeis];
       randomIndex = Math.floor(Math.random() * perguntasArr.length);
       pergunta = perguntasArr.splice(randomIndex, 1)[0];
