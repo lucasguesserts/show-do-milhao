@@ -774,7 +774,7 @@ export const bancoPerguntas = [
   },
   {
     pergunta: 'Qual é a moeda oficial da Alemanha?',
-    alternativas: ['LIRA', 'MARCO', 'FRANCO', 'LIBRA'],
+    alternativas: ['REAL', 'EURO', 'DOLAR', 'LIBRA'],
     dificuldade: 'Média',
     resposta: '2',
   },
