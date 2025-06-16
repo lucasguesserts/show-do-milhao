@@ -24,6 +24,7 @@ import ganhouChocolatinhoAudio from '../../data/audio/ganhou_chocolatinho.mp3';
 import ganhouChuparDedoAudio from '../../data/audio/chupar_dedo.ogg';
 import pularAudio from '../../data/audio/pular.mp3';
 import plateiaAudio from '../../data/audio/plateia.mp3';
+import cartasAudio from '../../data/audio/cartas.mp3';
 
 const noPrizeOption = "Chupar o Dedo";
 const tempo_para_responder_pergunta = 30;
@@ -324,6 +325,21 @@ const Game = ({ setGameStarted }) => {
     };
   }, [counterInicio]);
 
+  //// cartas
+  const cartasAudioRef = useRef(null);
+  // cartas
+  useEffect(() => {
+    cartasAudioRef.current = new Audio(cartasAudio);
+    cartasAudioRef.current.loop = false;
+    cartasAudioRef.current.volume = 1.0;
+    return () => {
+      if (cartasAudioRef.current) {
+        cartasAudioRef.current.pause();
+        cartasAudioRef.current.currentTime = 0;
+      }
+    };
+  }, [counterInicio]);
+
   const playPrizeAudio = () => {
     switch (recompensaPorNivel[currentNivel + 1]) {
       case recompensaPorNivel[recompensaPorNivel.length - 1]:
@@ -386,6 +402,10 @@ const Game = ({ setGameStarted }) => {
     if (plateiaAudioRef.current) {
       plateiaAudioRef.current.pause();
       plateiaAudioRef.current.currentTime = 0;
+    }
+    if (cartasAudioRef.current) {
+      cartasAudioRef.current.pause();
+      cartasAudioRef.current.currentTime = 0;
     }
   };
 
@@ -484,6 +504,7 @@ const Game = ({ setGameStarted }) => {
 
   const usarCartas = () => {
     stopSounds();
+    cartasAudioRef.current.play();
     setCartasDisponiveis((c) => c - 1);
     clearInterval(timerPergunta);
     setShowCardsPrompt(true);
