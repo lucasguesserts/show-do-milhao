@@ -25,10 +25,10 @@ import ganhouChuparDedoAudio from '../../data/audio/chupar_dedo.ogg';
 const noPrizeOption = "Chupar o Dedo";
 const tempo_para_responder_pergunta = 30;
 const tempo_para_pesquisar = 40;
-const perguntas_faceis = 4;
-const perguntas_medias = 6;
-const perguntas_dificeis = 2;
-const acertos_para_ganhar = perguntas_faceis + perguntas_medias + perguntas_dificeis;
+const perguntas_faceis_a_fazer = 4;
+const perguntas_medias_a_fazer = 6;
+const perguntas_dificeis_a_fazer = 4;
+const acertos_para_ganhar = perguntas_faceis_a_fazer + perguntas_medias_a_fazer + perguntas_dificeis_a_fazer;
 const recompensaPorNivel = Array(acertos_para_ganhar - 3 + 2).fill(noPrizeOption).concat(["Chocolatinho", "Chocolate", "Chocolatão"]);
 
 
@@ -41,10 +41,6 @@ if (tempo_para_responder_pergunta < 1) {
 
 const Game = ({ setGameStarted }) => {
   // States
-  const [perguntasFaceis, setPerguntasFaceis] = useState(null);
-  const [perguntasMedias, setPerguntasMedias] = useState(null);
-  const [perguntasDificeis, setPerguntasDificeis] = useState(null);
-
   const [currentPergunta, setCurrentPergunta] = useState(null);
   const [currentNivel, setCurrentNivel] = useState(0);
   const [counterInicio, setCounterInicio] = useState(1); // this guarantees that the questions are loaded before continueGame() is called
@@ -75,32 +71,35 @@ const Game = ({ setGameStarted }) => {
   const [timerPesquisas, setTimerPesquisas] = useState(null);
   const [counterPesquisas, setCounterPesquisas] = useState(1);
 
-  // Divide perguntas em faceis, medias e dificeis
-  const dividePerguntas = () => {
-    const perguntas = [...bancoPerguntas];
-    setPerguntasFaceis(perguntas.filter((p) => p.dificuldade === 'Fácil'));
-    setPerguntasMedias(perguntas.filter((p) => p.dificuldade === 'Média'));
-    setPerguntasDificeis(perguntas.filter((p) => p.dificuldade === 'Difícil'));
-  };
+  let perguntasFaceis = bancoPerguntas.filter((p) => p.dificuldade === 'Fácil');
+  let perguntasMedias = bancoPerguntas.filter((p) => p.dificuldade === 'Média');
+  let perguntasDificeis = bancoPerguntas.filter((p) => p.dificuldade === 'Difícil');
 
   // Seleciona pergunta aleatoria
   const getPerguntaAleatoria = (currentNivel) => {
     let perguntasArr, pergunta, randomIndex;
-    if (currentNivel <= perguntas_faceis) {
+    console.log(currentNivel);
+    console.log(perguntasFaceis.length);
+    console.log(perguntasMedias.length);
+    console.log(perguntasDificeis.length);
+    if (currentNivel <= perguntas_faceis_a_fazer) {
+      console.log("faceis");
       perguntasArr = [...perguntasFaceis];
       randomIndex = Math.floor(Math.random() * perguntasArr.length);
       pergunta = perguntasArr.splice(randomIndex, 1)[0];
-      setPerguntasFaceis(perguntasArr);
-    } else if (currentNivel <= perguntas_medias) {
+      perguntasFaceis = perguntasArr;
+    } else if (currentNivel <= perguntas_faceis_a_fazer + perguntas_medias_a_fazer) {
+      console.log("medias");
       perguntasArr = [...perguntasMedias];
       randomIndex = Math.floor(Math.random() * perguntasArr.length);
       pergunta = perguntasArr.splice(randomIndex, 1)[0];
-      setPerguntasMedias(perguntasArr);
-    } else if (currentNivel <= perguntas_dificeis) {
+      perguntasMedias = perguntasArr;
+    } else if (currentNivel <= perguntas_faceis_a_fazer + perguntas_medias_a_fazer + perguntas_dificeis_a_fazer) {
+      console.log("dificeis");
       perguntasArr = [...perguntasDificeis];
       randomIndex = Math.floor(Math.random() * perguntasArr.length);
       pergunta = perguntasArr.splice(randomIndex, 1)[0];
-      setPerguntasDificeis(perguntasArr);
+      perguntasDificeis = perguntasArr;
     }
     setCurrentPergunta(pergunta);
   };
@@ -123,7 +122,6 @@ const Game = ({ setGameStarted }) => {
 
   // Inicia o jogo
   useEffect(() => {
-    dividePerguntas();
     setCurrentNivel(0); // start at 0 so that continueGame() will start at 1
     setCounterInicio(0);
     setCartaValue(Math.floor(Math.random() * 4));
