@@ -27,7 +27,7 @@ const tempo_para_responder_pergunta = 30;
 const tempo_para_pesquisar = 40;
 const perguntas_faceis_a_fazer = 4;
 const perguntas_medias_a_fazer = 6;
-const perguntas_dificeis_a_fazer = 4;
+const perguntas_dificeis_a_fazer = 2;
 const acertos_para_ganhar = perguntas_faceis_a_fazer + perguntas_medias_a_fazer + perguntas_dificeis_a_fazer;
 const recompensaPorNivel = Array(acertos_para_ganhar - 3 + 2).fill(noPrizeOption).concat(["Chocolatinho", "Chocolate", "Chocolatão"]);
 
