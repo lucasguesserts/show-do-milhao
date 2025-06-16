@@ -446,6 +446,12 @@ const Game = ({ setGameStarted }) => {
     iniciaTimerPergunta();
   };
 
+  const timerPesquisasFinished = () => {
+    clearInterval(timerPesquisas);
+    ticTocAudioRef.current.pause();
+    tempoAcabouAudioRef.current.play();
+  };
+
   // Render
   return (
     <section className='game background'>
@@ -490,6 +496,7 @@ const Game = ({ setGameStarted }) => {
             <p>Tempo disponível para pesquisa: {counterPesquisas}</p>
             <p><Button className="btn btn-primary" onClick={iniciaTimerPesquisas}>Iniciar</Button></p>
             <p><Button className="btn btn-primary" onClick={pesquisasResumeGame}>Responder</Button></p>
+            {counterPesquisas === 0 && timerPesquisasFinished()}
           </div>
         </div>
       )}
