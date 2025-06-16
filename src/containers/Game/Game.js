@@ -13,6 +13,7 @@ import './Game.css';
 import logo from './logo.png';
 import UnclosableModal from '../../components/UnclosableModal';
 
+import inicioPerguntaAudio from '../../data/audio/inicio_pergunta.mp3';
 import certaRespostaAudio from '../../data/audio/certa_resposta.mp3';
 import erradaRespostaAudio from '../../data/audio/errada_resposta.mp3';
 import tempoAcabouAudio from '../../data/audio/tempo_acabou.mp3';
@@ -131,6 +132,7 @@ const Game = ({ setGameStarted }) => {
   const iniciaTimerPergunta = () => {
     clearInterval(timerPergunta);
     setCounterPergunta(tempo_para_responder_pergunta);
+    inicioPerguntaAudioRef.current.play();
     setTimerPergunta(
       setInterval(() => {
         setCounterPergunta((c) => c - 1);
@@ -154,6 +156,21 @@ const Game = ({ setGameStarted }) => {
 
 
   // songs
+
+  //// inicio pergunta
+  const inicioPerguntaAudioRef = useRef(null);
+  // inicio pergunta
+  useEffect(() => {
+    inicioPerguntaAudioRef.current = new Audio(inicioPerguntaAudio);
+    inicioPerguntaAudioRef.current.loop = false;
+    inicioPerguntaAudioRef.current.volume = 1.0;
+    return () => {
+      if (inicioPerguntaAudioRef.current) {
+        inicioPerguntaAudioRef.current.pause();
+        inicioPerguntaAudioRef.current.currentTime = 0;
+      }
+    };
+  }, [counterInicio]);
 
   //// certa resposta
   const certaRespostaAudioRef = useRef(null);
@@ -294,6 +311,10 @@ const Game = ({ setGameStarted }) => {
 
   //// stop sounds
   const stopSounds = () => {
+    if (inicioPerguntaAudioRef.current) {
+      inicioPerguntaAudioRef.current.pause();
+      inicioPerguntaAudioRef.current.currentTime = 0;
+    }
     if (certaRespostaAudioRef.current) {
       certaRespostaAudioRef.current.pause();
       certaRespostaAudioRef.current.currentTime = 0;
