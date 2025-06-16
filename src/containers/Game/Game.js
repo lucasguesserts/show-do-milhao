@@ -357,6 +357,24 @@ const Game = ({ setGameStarted }) => {
   }, [counterInicio]);
 
   useEffect(() => {
+    // timerPesquisasFinished
+    if (counterPesquisas == 0) {
+      clearInterval(timerPesquisas);
+      ticTocAudioRef.current.pause();
+      tempoAcabouAudioRef.current.play();
+    }
+  }, [counterPesquisas])
+
+  useEffect(() => {
+    // timerPlateiaFinished
+    if (counterPlateia == 0) {
+      clearInterval(timerPlateia);
+      ticTocAudioRef.current.pause();
+      tempoAcabouAudioRef.current.play();
+    }
+  }, [counterPlateia])
+
+  useEffect(() => {
     if (counterPergunta === 0) {
       clearInterval(timerPergunta);
       setShowModal(true);
@@ -566,7 +584,6 @@ const Game = ({ setGameStarted }) => {
             <p>Tempo disponível para pesquisa: {counterPesquisas}</p>
             <p><Button className="btn btn-primary" onClick={iniciaTimerPesquisas}>Iniciar</Button></p>
             <p><Button className="btn btn-primary" onClick={pesquisasResumeGame}>Responder</Button></p>
-            {counterPesquisas === 0 && timerPesquisasFinished()}
           </div>
         </div>
       )}
