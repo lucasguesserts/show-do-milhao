@@ -23,6 +23,7 @@ import ganhouChocolateAudio from '../../data/audio/ganhou_chocolate.mp3';
 import ganhouChocolatinhoAudio from '../../data/audio/ganhou_chocolatinho.mp3';
 import ganhouChuparDedoAudio from '../../data/audio/chupar_dedo.ogg';
 import pularAudio from '../../data/audio/pular.mp3';
+import plateiaAudio from '../../data/audio/plateia.mp3';
 
 const noPrizeOption = "Chupar o Dedo";
 const tempo_para_responder_pergunta = 30;
@@ -308,6 +309,21 @@ const Game = ({ setGameStarted }) => {
     };
   }, [counterInicio]);
 
+  //// plateia
+  const plateiaAudioRef = useRef(null);
+  // plateia
+  useEffect(() => {
+    plateiaAudioRef.current = new Audio(plateiaAudio);
+    plateiaAudioRef.current.loop = false;
+    plateiaAudioRef.current.volume = 1.0;
+    return () => {
+      if (plateiaAudioRef.current) {
+        plateiaAudioRef.current.pause();
+        plateiaAudioRef.current.currentTime = 0;
+      }
+    };
+  }, [counterInicio]);
+
   const playPrizeAudio = () => {
     switch (recompensaPorNivel[currentNivel + 1]) {
       case recompensaPorNivel[recompensaPorNivel.length - 1]:
@@ -366,6 +382,10 @@ const Game = ({ setGameStarted }) => {
     if (pularAudioRef.current) {
       pularAudioRef.current.pause();
       pularAudioRef.current.currentTime = 0;
+    }
+    if (plateiaAudioRef.current) {
+      plateiaAudioRef.current.pause();
+      plateiaAudioRef.current.currentTime = 0;
     }
   };
 
@@ -531,6 +551,7 @@ const Game = ({ setGameStarted }) => {
 
   const usarAjudaPlateia = () => {
     stopSounds();
+    plateiaAudioRef.current.play();
     setAjudaPlateiaDisponiveis((a) => a - 1);
     clearInterval(timerPergunta);
     setShowPlateiaPrompt(true);
