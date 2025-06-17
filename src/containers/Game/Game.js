@@ -8,7 +8,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 
-import { bancoPerguntas } from '../../data/perguntas';
+import { bancoPerguntas } from '../../data/perguntas_debug';
 import './Game.css';
 import logo from './logo.png';
 import UnclosableModal from '../../components/UnclosableModal';
@@ -101,13 +101,6 @@ const Game = ({ setGameStarted }) => {
     if (perguntasDificeis.length < perguntasDificeisRestantes) {
       throw new Error(`O número de perguntas difíceis disponíveis (${perguntasDificeis.length}) é menor que o número de perguntas difíceis a fazer (${perguntas_dificeis_a_fazer}).`);
     }
-    console.log(`perguntas faceis disponiveis: ${perguntasFaceis.length}`)
-    console.log(`perguntas medias disponiveis: ${perguntasMedias.length}`)
-    console.log(`perguntas dificeis disponiveis: ${perguntasDificeis.length}`)
-    console.log(`perguntas faceis restantes: ${perguntasFaceisRestantes}`)
-    console.log(`perguntas medias restantes: ${perguntasMediasRestantes}`)
-    console.log(`perguntas dificeis restantes: ${perguntasDificeisRestantes}`)
-    console.log("========")
     let pergunta, randomIndex;
     if (currentNivel <= perguntas_faceis_a_fazer) {
       randomIndex = Math.floor(Math.random() * perguntasFaceis.length);
