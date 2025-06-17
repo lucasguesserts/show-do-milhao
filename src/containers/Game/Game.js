@@ -8,7 +8,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 
-import { bancoPerguntas } from '../../data/perguntas_debug';
+import { bancoPerguntas } from '../../data/perguntas';
 import './Game.css';
 import logo from './logo.png';
 import UnclosableModal from '../../components/UnclosableModal';
@@ -428,7 +428,7 @@ const Game = ({ setGameStarted }) => {
 
   useEffect(() => {
     // timerPesquisasFinished
-    if (counterPesquisas == 0) {
+    if (counterPesquisas === 0) {
       clearInterval(timerPesquisas);
       ticTocAudioRef.current.pause();
       tempoAcabouAudioRef.current.play();
@@ -437,7 +437,7 @@ const Game = ({ setGameStarted }) => {
 
   useEffect(() => {
     // timerPlateiaFinished
-    if (counterPlateia == 0) {
+    if (counterPlateia === 0) {
       clearInterval(timerPlateia);
       ticTocAudioRef.current.pause();
       tempoAcabouAudioRef.current.play();
@@ -591,12 +591,6 @@ const Game = ({ setGameStarted }) => {
     stopSounds();
     setShowPesquisasPrompt(false);
     iniciaTimerPergunta();
-  };
-
-  const timerPesquisasFinished = () => {
-    clearInterval(timerPesquisas);
-    ticTocAudioRef.current.pause();
-    tempoAcabouAudioRef.current.play();
   };
 
   const usarAjudaPlateia = () => {
