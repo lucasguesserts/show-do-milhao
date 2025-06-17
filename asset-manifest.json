@@ -1,0 +1,41 @@
+{
+  "files": {
+    "main.css": "/show-do-milhao/static/css/main.12c0597d.chunk.css",
+    "main.js": "/show-do-milhao/static/js/main.d214abb3.chunk.js",
+    "main.js.map": "/show-do-milhao/static/js/main.d214abb3.chunk.js.map",
+    "runtime-main.js": "/show-do-milhao/static/js/runtime-main.048b6b7d.js",
+    "runtime-main.js.map": "/show-do-milhao/static/js/runtime-main.048b6b7d.js.map",
+    "static/css/2.af3c1da9.chunk.css": "/show-do-milhao/static/css/2.af3c1da9.chunk.css",
+    "static/js/2.32a7f2ea.chunk.js": "/show-do-milhao/static/js/2.32a7f2ea.chunk.js",
+    "static/js/2.32a7f2ea.chunk.js.map": "/show-do-milhao/static/js/2.32a7f2ea.chunk.js.map",
+    "index.html": "/show-do-milhao/index.html",
+    "precache-manifest.b4f77adabd2e8380e7357c4656935eb5.js": "/show-do-milhao/precache-manifest.b4f77adabd2e8380e7357c4656935eb5.js",
+    "service-worker.js": "/show-do-milhao/service-worker.js",
+    "static/css/2.af3c1da9.chunk.css.map": "/show-do-milhao/static/css/2.af3c1da9.chunk.css.map",
+    "static/css/main.12c0597d.chunk.css.map": "/show-do-milhao/static/css/main.12c0597d.chunk.css.map",
+    "static/js/2.32a7f2ea.chunk.js.LICENSE.txt": "/show-do-milhao/static/js/2.32a7f2ea.chunk.js.LICENSE.txt",
+    "static/media/Home.css": "/show-do-milhao/static/media/background.afa908bc.png",
+    "static/media/cartas.mp3": "/show-do-milhao/static/media/cartas.258c6a2f.mp3",
+    "static/media/certa_resposta.mp3": "/show-do-milhao/static/media/certa_resposta.f5936e8b.mp3",
+    "static/media/chupar_dedo.ogg": "/show-do-milhao/static/media/chupar_dedo.cd46933f.ogg",
+    "static/media/errada_resposta.mp3": "/show-do-milhao/static/media/errada_resposta.3a65ec6b.mp3",
+    "static/media/ganhou_chocolatao.mp3": "/show-do-milhao/static/media/ganhou_chocolatao.9a2bfa5b.mp3",
+    "static/media/ganhou_chocolate.mp3": "/show-do-milhao/static/media/ganhou_chocolate.e783a4ce.mp3",
+    "static/media/ganhou_chocolatinho.mp3": "/show-do-milhao/static/media/ganhou_chocolatinho.32de996e.mp3",
+    "static/media/home.mp3": "/show-do-milhao/static/media/home.0aa4dd9b.mp3",
+    "static/media/inicio_pergunta.mp3": "/show-do-milhao/static/media/inicio_pergunta.1d864be0.mp3",
+    "static/media/logo.png": "/show-do-milhao/static/media/logo.cdd25a54.png",
+    "static/media/pesquisa.mp3": "/show-do-milhao/static/media/pesquisa.e037cc4a.mp3",
+    "static/media/plateia.mp3": "/show-do-milhao/static/media/plateia.4921469c.mp3",
+    "static/media/pular.mp3": "/show-do-milhao/static/media/pular.2f5733b5.mp3",
+    "static/media/tempo_acabou.mp3": "/show-do-milhao/static/media/tempo_acabou.cd9550be.mp3",
+    "static/media/tic_toc.mp3": "/show-do-milhao/static/media/tic_toc.5f86a254.mp3"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.048b6b7d.js",
+    "static/css/2.af3c1da9.chunk.css",
+    "static/js/2.32a7f2ea.chunk.js",
+    "static/css/main.12c0597d.chunk.css",
+    "static/js/main.d214abb3.chunk.js"
+  ]
+}
