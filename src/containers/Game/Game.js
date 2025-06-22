@@ -28,7 +28,7 @@ import cartasAudio from '../../data/audio/cartas.mp3';
 import pesquisaAudio from '../../data/audio/pesquisa.mp3';
 
 const noPrizeOption = "Chupar o Dedo";
-const tempo_para_responder_pergunta = 30;
+const tempo_para_responder_pergunta = 90;
 const tempo_para_pesquisar = 40;
 const tempo_para_plateia = 90;
 const perguntas_faceis_a_fazer = 4;

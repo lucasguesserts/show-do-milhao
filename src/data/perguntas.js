@@ -1826,7 +1826,7 @@ export const bancoPerguntas = [
     pergunta: 'Qual o resultado da expressão: 2+3*(4-1)?',
     alternativas: ['17', '10', '15', '11'],
     dificuldade: 'Média',
-    resposta: '3',
+    resposta: '4',
   },
   {
     pergunta: 'No futebol americano, o touchdown equivale a quantos pontos?',
