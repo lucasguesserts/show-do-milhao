@@ -35,7 +35,7 @@ const perguntas_faceis_a_fazer = 4;
 const perguntas_medias_a_fazer = 6;
 const perguntas_dificeis_a_fazer = 2;
 const acertos_para_ganhar = perguntas_faceis_a_fazer + perguntas_medias_a_fazer + perguntas_dificeis_a_fazer;
-const recompensaPorNivel = Array(acertos_para_ganhar - 3 + 2).fill(noPrizeOption).concat(["Chocolatinho", "Chocolate", "Chocolatão"]);
+const recompensaPorNivel = Array(acertos_para_ganhar - 5 + 2).fill(noPrizeOption).concat(["Chocolatinho", "Chocolatinho", "Chocolate", "Chocolate", "Chocolatão"]);
 
 
 if (acertos_para_ganhar < 3) {
